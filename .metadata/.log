@@ -16,3 +16,6 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data C:\Users\BaoThua
 
 !ENTRY org.eclipse.cdt.core 1 0 2024-01-14 14:44:00.734
 !MESSAGE Indexed 'TuThuoc' (17 sources, 78 headers) in 6.01 sec: 3,642 declarations; 13,251 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.012%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-01-14 17:09:43.569
+!MESSAGE Indexed 'TuThuoc' (20 sources, 80 headers) in 2.23 sec: 3,690 declarations; 13,548 references; 1 unresolved inclusions; 1 syntax errors; 22 unresolved names (0.13%)
