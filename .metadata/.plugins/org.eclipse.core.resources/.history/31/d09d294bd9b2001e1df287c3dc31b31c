@@ -1,0 +1,24 @@
+#include "KeyPad.h"
+#include "KeyPadConfig.h"
+
+#define _KEYPAD_DELAY(x)      		HAL_Delay(x)
+
+static GPIO_ROW_TYPEDEF COL_KEY_PAD;
+static GPIO_ROW_TYPEDEF ROW_KEY_PAD;
+
+#define SET_ROW_1_HIGH              HAL_GPIO_WritePin(ROW, KEYPAD_ROW_1_PIN, GPIO_PIN_SET)
+#define SET_ROW_2_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_PIN_SET)
+#define SET_ROW_3_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_PIN_SET)
+#define SET_ROW_4_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_PIN_SET)
+#define SET_ROW_1_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN, GPIO_PIN_RESET)
+#define SET_ROW_2_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_PIN_RESET)
+#define SET_ROW_3_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_PIN_RESET)
+#define SET_ROW_4_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_PIN_RESET)
+
+KeyPad_t	KeyPad;
+
+void	KeyPad_Init(uint8_t sizeColumn, uint8_t sizeRow)
+{
+  KeyPad.ColumnSize = sizeColumn / 2;
+  KeyPad.RowSize = sizeRow / 2;
+}

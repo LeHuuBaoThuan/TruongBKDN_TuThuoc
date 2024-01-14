@@ -1,0 +1,48 @@
+#include "KeyPad.h"
+#include "KeyPadConfig.h"
+
+#define _KEYPAD_DELAY(x)      		HAL_Delay(x)
+
+static GPIO_ROW_TYPEDEF COL_KEY_PAD;
+static GPIO_ROW_TYPEDEF ROW_KEY_PAD;
+
+//#define SET_ROW_1_HIGH              HAL_GPIO_WritePin(, KEYPAD_ROW_1_PIN, GPIO_PIN_SET)
+//#define SET_ROW_2_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_PIN_SET)
+//#define SET_ROW_3_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_PIN_SET)
+//#define SET_ROW_4_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_PIN_SET)
+//#define SET_ROW_1_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN, GPIO_PIN_RESET)
+//#define SET_ROW_2_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_PIN_RESET)
+//#define SET_ROW_3_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_PIN_RESET)
+//#define SET_ROW_4_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_PIN_RESET)
+
+KeyPad_t	KeyPad;
+
+void KeyPad_Init(	uint8_t sizeColumn, uint8_t sizeRow,\
+					GPIO_TypeDef* C_port0, GPIO_TypeDef* C_port1, GPIO_TypeDef* C_port2, GPIO_TypeDef* C_port3,\
+					uint16_t C_pin0, uint16_t C_pin1, uint16_t C_pin2, uint16_t C_pin3,\
+					GPIO_TypeDef* R_port0, GPIO_TypeDef* R_port1, GPIO_TypeDef* R_port2, GPIO_TypeDef* R_port3,\
+					uint16_t R_pin0, uint16_t R_pin1, uint16_t R_pin2, uint16_t R_pin3)
+{
+  KeyPad.ColumnSize = sizeColumn / 2;
+  KeyPad.RowSize = sizeRow / 2;
+
+  COL_KEY_PAD.PORT.GPIO0 = C_port0;
+  COL_KEY_PAD.PORT.GPIO1 = C_port1;
+  COL_KEY_PAD.PORT.GPIO2 = C_port2;
+  COL_KEY_PAD.PORT.GPIO3 = C_port3;
+
+  COL_KEY_PAD.PIN.GPIO_PIN_A = C_pin0;
+  COL_KEY_PAD.PIN.GPIO_PIN_B = C_pin1;
+  COL_KEY_PAD.PIN.GPIO_PIN_C = C_pin2;
+  COL_KEY_PAD.PIN.GPIO_PIN_D = C_pin3;
+
+  ROW_KEY_PAD.PORT.GPIO0 = R_port0;
+  ROW_KEY_PAD.PORT.GPIO1 = R_port1;
+  ROW_KEY_PAD.PORT.GPIO2 = R_port2;
+  ROW_KEY_PAD.PORT.GPIO3 = R_port3;
+
+  ROW_KEY_PAD.PIN.GPIO_PIN_A = R_pin0;
+  ROW_KEY_PAD.PIN.GPIO_PIN_B = R_pin1;
+  ROW_KEY_PAD.PIN.GPIO_PIN_C = R_pin2;
+  ROW_KEY_PAD.PIN.GPIO_PIN_D = R_pin3;
+}

@@ -1,0 +1,10 @@
+#include "KeyPad.h"
+#include "KeyPadConfig.h"
+
+#define _KEYPAD_DELAY(x)      		HAL_Delay(x)
+
+void	KeyPad_Init(uint8_t sizeColumn, uint8_t sizeRow)
+{
+  KeyPad.ColumnSize = sizeColumn / 2;
+  KeyPad.RowSize = sizeRow / 2;
+}

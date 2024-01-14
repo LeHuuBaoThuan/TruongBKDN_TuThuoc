@@ -1,0 +1,106 @@
+#include "KeyPad.h"
+#include "KeyPadConfig.h"
+
+#define _KEYPAD_DELAY(x)      		HAL_Delay(x)
+
+/* Row pins are output */
+#define SET_ROW_1_HIGH              HAL_GPIO_WritePin(), KEYPAD_ROW_1_PIN, GPIO_PIN_SET)
+#define SET_ROW_2_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_PIN_SET)
+#define SET_ROW_3_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_PIN_SET)
+#define SET_ROW_4_HIGH              HAL_GPIO_WritePin(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_PIN_SET)
+#define SET_ROW_1_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN, GPIO_PIN_RESET)
+#define SET_ROW_2_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_PIN_RESET)
+#define SET_ROW_3_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_PIN_RESET)
+#define SET_ROW_4_LOW               HAL_GPIO_WritePin(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_PIN_RESET)
+
+/*Column pin are input, so read the pins */
+#define READ_COLUMN_1               HAL_GPIO_ReadPin(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN)
+#define READ_COLUMN_2               HAL_GPIO_ReadPin(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN)
+#define READ_COLUMN_3               HAL_GPIO_ReadPin(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN)
+#define READ_COLUMN_4               HAL_GPIO_ReadPin(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN)
+
+//#############################################################################################
+void	KeyPad_Init(uint8_t sizeColumn, uint8_t sizeRow)
+{
+  KeyPad.ColumnSize = sizeColumn / 2;
+  KeyPad.RowSize = sizeRow / 2;
+}
+//#############################################################################################
+uint16_t	KeyPad_Scan(void)
+{
+	uint16_t  key=0;
+
+	return key;
+}
+//#############################################################################################
+uint16_t	KeyPad_WaitForKey(uint32_t  Timeout_ms)
+{
+  uint16_t  keyRead;
+  while(Timeout_ms==0)
+  {
+    keyRead = KeyPad_Scan();
+		if(keyRead!=0)
+		{
+			KeyPad.LastKey = keyRead;
+			return keyRead;
+		}
+		_KEYPAD_DELAY(_KEYPAD_DEBOUNCE_TIME_MS);
+	}
+	uint32_t	StartTime = HAL_GetTick();
+	while(HAL_GetTick()-StartTime < Timeout_ms)
+	{
+		keyRead = KeyPad_Scan();
+		if(keyRead!=0)
+		{
+			KeyPad.LastKey = keyRead;
+			return keyRead;
+		}
+		_KEYPAD_DELAY(_KEYPAD_DEBOUNCE_TIME_MS);
+	}
+	KeyPad.LastKey=0;
+	return 0;
+}
+//#############################################################################################
+char	KeyPad_WaitForKeyGetChar(uint32_t	Timeout_ms)
+{
+  switch(KeyPad_WaitForKey(Timeout_ms))
+  {
+    case 0x0000:
+      return 0;
+		case 0x0101:
+			return '1';
+		case 0x0201:
+			return '2';
+		case 0x0401:
+			return '3';
+		case 0x0801:
+			return 'A';
+		case 0x0102:
+			return '4';
+		case 0x0202:
+			return '5';
+		case 0x0402:
+			return '6';
+		case 0x0802:
+			return 'B';
+		case 0x0104:
+			return '7';
+		case 0x0204:
+			return '8';		
+		case 0x0404:
+			return '9';
+		case 0x0804:
+			return 'C';
+		case 0x0108:
+			return '*';				
+		case 0x0208:
+			return '0';				
+		case 0x0408:
+			return '#';
+		case 0x0808:
+			return 'D';
+		
+		default:
+			return 0;		
+	}	
+}
