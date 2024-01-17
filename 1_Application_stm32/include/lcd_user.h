@@ -10,5 +10,6 @@
 
 #include "i2c-lcd.h"
 
-void lcd_user_init(CLCD_I2C_Name* LCD_user, uint8_t Data_user, uint8_t Mode_user);
+void lcd_user_init(CLCD_I2C_Name* LCD_user, I2C_HandleTypeDef* hi2c_CLCD_user, uint8_t Address_user, uint8_t Colums_user, uint8_t Rows_user);
+
 #endif /* _LCD_USER_H_ */

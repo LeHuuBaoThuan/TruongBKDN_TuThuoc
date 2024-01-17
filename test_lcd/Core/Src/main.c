@@ -96,7 +96,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  CLCD_I2C_Init(&LCD1, &hi2c1, 0x27 << 1, 20, 4);
+  lcd_user_init(&LCD1, &hi2c1, (0x27 << 1), 20, 4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
