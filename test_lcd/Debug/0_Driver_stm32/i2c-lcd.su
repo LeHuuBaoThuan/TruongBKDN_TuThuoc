@@ -1,0 +1,12 @@
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:20:13:CLCD_Delay	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:24:13:CLCD_WriteI2C	32	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:56:6:CLCD_I2C_Init	24	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:87:6:CLCD_I2C_SetCursor	24	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:121:6:CLCD_I2C_WriteChar	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:145:6:CLCD_I2C_WriteString	24	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:179:6:CLCD_I2C_Clear	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:184:6:CLCD_I2C_ReturnHome	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:189:6:CLCD_I2C_CursorOn	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:194:6:CLCD_I2C_CursorOff	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:199:6:CLCD_I2C_BlinkOn	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/i2c-lcd.c:204:6:CLCD_I2C_BlinkOff	16	static

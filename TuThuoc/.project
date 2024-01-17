@@ -31,9 +31,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Driver_stm32</name>
+			<name>0_Driver_stm32</name>
 			<type>2</type>
-			<location>C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/Driver_stm32</location>
+			<location>C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32</location>
+		</link>
+		<link>
+			<name>1_Application_stm32</name>
+			<type>2</type>
+			<location>C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/1_Application_stm32</location>
 		</link>
 	</linkedResources>
 </projectDescription>
