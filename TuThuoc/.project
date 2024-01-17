@@ -33,12 +33,16 @@
 		<link>
 			<name>0_Driver_stm32</name>
 			<type>2</type>
+<<<<<<< HEAD
 			<location>C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32</location>
 		</link>
 		<link>
 			<name>1_Application_stm32</name>
 			<type>2</type>
 			<location>C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/1_Application_stm32</location>
+=======
+			<location>C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/Driver_stm32</location>
+>>>>>>> parent of 10d839d (.)
 		</link>
 	</linkedResources>
 </projectDescription>

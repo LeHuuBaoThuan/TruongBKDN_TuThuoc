@@ -46,8 +46,12 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32F1xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+<<<<<<< HEAD
 									<listOptionValue builtIn="false" value="&quot;C:\Users\BaoThuan\OneDrive - The University of Technology\Desktop\PROJECT\GIT_HUB\BKDN_TuThuoc\0_Driver_stm32\0_include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Users\BaoThuan\OneDrive - The University of Technology\Desktop\PROJECT\GIT_HUB\BKDN_TuThuoc\1_Application_stm32\include&quot;"/>
+=======
+									<listOptionValue builtIn="false" value="&quot;C:\Users\BaoThuan\OneDrive - The University of Technology\Desktop\PROJECT\GIT_HUB\BKDN_TuThuoc\Driver_stm32\0_include&quot;"/>
+>>>>>>> parent of 10d839d (.)
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1443349446" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
