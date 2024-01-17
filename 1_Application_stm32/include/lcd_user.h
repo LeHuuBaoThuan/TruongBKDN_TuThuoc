@@ -10,6 +10,15 @@
 
 #include "i2c-lcd.h"
 
-void lcd_user_init(CLCD_I2C_Name* LCD_user, I2C_HandleTypeDef* hi2c_CLCD_user, uint8_t Address_user, uint8_t Colums_user, uint8_t Rows_user);
+typedef enum
+{
+	STATUS_1 = 1,
+	STATUS_2 = 2,
+	STATUS_3 = 3,
+	STATUS_4 = 4,
+	STATUS_5 = 5,
+} STATUS_DISPLAY_TYPEDEF;
+
+void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display);
 
 #endif /* _LCD_USER_H_ */

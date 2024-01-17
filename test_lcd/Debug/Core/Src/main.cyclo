@@ -1,5 +1,6 @@
-main.c:73:5:main	1
-main.c:134:6:SystemClock_Config	3
-main.c:171:13:MX_I2C1_Init	2
-main.c:205:13:MX_GPIO_Init	1
-main.c:233:6:Error_Handler	1
+main.c:75:5:main	1
+main.c:121:6:SystemClock_Config	3
+main.c:158:13:MX_I2C1_Init	2
+main.c:192:13:MX_GPIO_Init	1
+main.c:223:6:HAL_GPIO_EXTI_Callback	5
+main.c:263:6:Error_Handler	1

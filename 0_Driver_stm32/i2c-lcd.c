@@ -105,11 +105,11 @@ void CLCD_I2C_SetCursor(CLCD_I2C_Name* LCD, uint8_t Xpos, uint8_t Ypos)
 	}
 	else if(Ypos == 2)
 	{
-		DRAM_ADDRESS = 0x14 + Xpos;
+		DRAM_ADDRESS = 0x10 + Xpos;
 	}
 	else if(Ypos == 3)
 	{
-		DRAM_ADDRESS = 0x54 + Xpos;
+		DRAM_ADDRESS = 0x50 + Xpos;
 	}
 	Xcursor = Xpos;
 
