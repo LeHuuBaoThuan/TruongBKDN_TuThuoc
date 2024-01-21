@@ -43,8 +43,6 @@
 I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
-uint8_t rows = 0;
-uint8_t col = 0;
 uint8_t state_lcd = 0;
 uint8_t Status_Display_1 = 0;
 /* USER CODE END PV */

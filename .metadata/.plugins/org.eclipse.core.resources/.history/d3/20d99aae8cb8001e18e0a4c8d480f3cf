@@ -22,7 +22,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include<KeyPad.h>
-#include<lcd_user.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -79,7 +78,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		Config--;
 		if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
 	}
-	if(ENTER_EXTI15_Pin == GPIO_Pin)
+	if(SELECT_EXTI15_Pin == GPIO_Pin)
 	{
 		if(1 == Mode)
 		{
@@ -96,7 +95,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	TimeBegin = HAL_GetTick();
 	while(		HAL_GPIO_ReadPin(GPIOA, UP_EXTI11_Pin) == GPIO_PIN_RESET		\
 			|| 	HAL_GPIO_ReadPin(GPIOA, DOWN_EXTI12_Pin) == GPIO_PIN_RESET 		\
-			|| 	HAL_GPIO_ReadPin(GPIOA, ENTER_EXTI15_Pin) == GPIO_PIN_RESET)	\
+			|| 	HAL_GPIO_ReadPin(GPIOA, SELECT_EXTI15_Pin) == GPIO_PIN_RESET)	\
 	{
 		TimeNow = HAL_GetTick();
 		if(TimeNow - TimeBegin == 5000)
@@ -117,7 +116,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	CLCD_I2C_Name LCD1;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/

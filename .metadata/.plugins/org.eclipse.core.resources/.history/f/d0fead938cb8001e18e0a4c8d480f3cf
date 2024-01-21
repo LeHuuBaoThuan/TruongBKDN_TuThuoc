@@ -22,7 +22,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include<KeyPad.h>
-#include<lcd_user.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,54 +59,6 @@ static void MX_I2C1_Init(void);
 GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
 GPIO_ROW_TYPEDEF ROW_KEY_PAD_main;
 char key = 0;
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	static uint32_t TimeBegin = 0;
-	static uint32_t TimeNow = 0;
-	/*CODE ISR*/
-	flag_button = 1;
-	if(UP_EXTI11_Pin == GPIO_Pin)
-	{
-//		flag_button = 1;
-		Config++;
-		if(Config > CONFIG_ROW3) Config = CONFIG_ROW1;
-	}
-	if(DOWN_EXTI12_Pin == GPIO_Pin)
-	{
-//		flag_button = 1;
-		Config--;
-		if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
-	}
-	if(ENTER_EXTI15_Pin == GPIO_Pin)
-	{
-		if(1 == Mode)
-		{
-			Enter = 1;
-		}
-		else
-		{
-			Mode = 1;
-		}
-
-	}
-	/*END CODE ISR*/
-	HAL_Delay(70);
-	TimeBegin = HAL_GetTick();
-	while(		HAL_GPIO_ReadPin(GPIOA, UP_EXTI11_Pin) == GPIO_PIN_RESET		\
-			|| 	HAL_GPIO_ReadPin(GPIOA, DOWN_EXTI12_Pin) == GPIO_PIN_RESET 		\
-			|| 	HAL_GPIO_ReadPin(GPIOA, ENTER_EXTI15_Pin) == GPIO_PIN_RESET)	\
-	{
-		TimeNow = HAL_GetTick();
-		if(TimeNow - TimeBegin == 5000)
-		{
-//			ButtonError = 1;
-			break;
-		}
-	}
-	HAL_Delay(70);
-	EXTI->PR = GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_15;
-}
 /* USER CODE END 0 */
 
 /**
@@ -117,7 +68,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	CLCD_I2C_Name LCD1;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -145,7 +96,6 @@ int main(void)
 					C1_OUT_Pin, C2_OUT_Pin, C3_OUT_Pin, C4_OUT_Pin,								\
 					R1_IN_GPIO_Port, R2_IN_GPIO_Port, R3_IN_GPIO_Port, R4_IN_GPIO_Port,					\
 					R1_IN_Pin, R2_IN_Pin, R3_IN_Pin, R4_IN_Pin);
-  CLCD_I2C_Init(&LCD1, &hi2c1, (0x27 << 1), 16, 4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -153,7 +103,6 @@ int main(void)
   while (1)
   {
 	  key = KEYPAD_Read(&COL_KEY_PAD_main, &ROW_KEY_PAD_main);
-	  lcd_system_handler(&LCD1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
