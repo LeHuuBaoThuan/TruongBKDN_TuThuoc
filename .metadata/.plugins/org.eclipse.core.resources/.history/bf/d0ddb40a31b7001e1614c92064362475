@@ -1,0 +1,163 @@
+/*
+ * lcd_user.c
+ *
+ *  Created on: Jan 16, 2024
+ *      Author: BaoThuan
+ */
+
+#include<lcd_user.h>
+
+static uint8_t delete = 0;
+static uint8_t Mode = 0;
+
+volatile STATUS_CONFIG_TYPEDEF Config = CONFIG_ROW1;
+
+volatile uint8_t Enter = 0;
+volatile uint8_t flag_button = 0;
+static INDEX_MODE_TYPEDEF Index_mode = 0;
+static uint8_t Status_Display = 0;
+
+void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display)
+{
+	if(status_display == STATUS_1)
+	{
+		// dislay hello ! Status_Display=0
+		CLCD_I2C_SetCursor(LCD_user, 0, 0);
+		CLCD_I2C_WriteString(LCD_user,"TRUONG DHBK-DHDN");
+
+		CLCD_I2C_SetCursor(LCD_user, 3, 1);
+		CLCD_I2C_WriteString(LCD_user,"KHOA CO KHI");
+
+		CLCD_I2C_SetCursor(LCD_user, 4, 2);
+		CLCD_I2C_WriteString(LCD_user,"TU THUOC");
+
+		CLCD_I2C_SetCursor(LCD_user, 0, 3);
+		CLCD_I2C_WriteString(LCD_user,"Please Set Mode!");
+	}
+	else if(status_display == STATUS_2)
+	{
+		// dislay Select Mode ! Status_Display=1
+		CLCD_I2C_SetCursor(LCD_user, 3, 0);
+		CLCD_I2C_WriteString(LCD_user,"SELECT MODE");
+
+		CLCD_I2C_SetCursor(LCD_user, 0, 1);
+		CLCD_I2C_WriteString(LCD_user,"-Language");
+
+		CLCD_I2C_SetCursor(LCD_user, 0, 2);
+		CLCD_I2C_WriteString(LCD_user,"-Enter password");
+
+		CLCD_I2C_SetCursor(LCD_user, 0, 3);
+		CLCD_I2C_WriteString(LCD_user,"-Exit");
+	}
+	else if(status_display == STATUS_3)
+	{
+		// dislay Select cycle ! Status_Display =2
+		CLCD_I2C_SetCursor(LCD_user, 0, 0);
+		CLCD_I2C_WriteString(LCD_user,"Enter ur number:");
+
+		CLCD_I2C_SetCursor(LCD_user, 0, 2);
+		CLCD_I2C_WriteString(LCD_user,"Password: ");
+
+//		CLCD_I2C_SetCursor(LCD_user, 0, 1);
+//		CLCD_I2C_WriteString(LCD_user,"Cycle : ");
+//
+//		CLCD_I2C_SetCursor(LCD_user, 0, 3);
+//		CLCD_I2C_WriteString(LCD_user,"Start");
+	}
+	else if(status_display == STATUS_4)
+	{
+		// dislay Until Cut ! Status_Display = 3
+		CLCD_I2C_SetCursor(LCD_user, 0, 0);
+		CLCD_I2C_WriteString(LCD_user,"Password OKE!");
+
+		CLCD_I2C_SetCursor(LCD_user, 0, 1);
+		CLCD_I2C_WriteString(LCD_user,"Wait few ");
+
+		CLCD_I2C_SetCursor(LCD_user, 3, 2);
+		CLCD_I2C_WriteString(LCD_user,"minutes...");
+	}
+	else if(status_display == STATUS_5)
+	{
+		// dislay Main ! Status_Display = 4
+	  CLCD_I2C_SetCursor(LCD_user, 0, 0);
+	  CLCD_I2C_WriteString(LCD_user,"Password FAIL!");
+
+	  CLCD_I2C_SetCursor(LCD_user, 0, 1);
+	  CLCD_I2C_WriteString(LCD_user,"\"Enter\" to enter");
+
+	  CLCD_I2C_SetCursor(LCD_user, 4, 2);
+	  CLCD_I2C_WriteString(LCD_user,"new password :<");
+	}
+}
+
+void system_handler(CLCD_I2C_Name* LCD_user)
+{
+	if(delete)
+	{
+		CLCD_I2C_Clear(LCD_user);
+		delete = 0;
+	}
+	if(Mode == 0)
+	{
+		Config = CONFIG_NONE;
+		Enter = 0;
+		Status_Display = 0;
+		lcd_user_display(LCD_user, Status_Display);
+		Index_mode = 0;
+	}
+	else if(Mode == 1)
+	{
+		if(Index_mode == 0)
+		{
+			Status_Display = 1;
+			if(Config != CONFIG_NONE)
+			{
+				if (flag_button)
+				{
+					CLCD_I2C_Clear(LCD_user);
+					// CLCD_I2C_SetCursor(LCD_user, 19, Config);   Thuan
+					// CLCD_I2C_WriteString(LCD_user,"<");
+					// display(Status_Display);
+					flag_button = 0;
+				}
+				CLCD_I2C_SetCursor(LCD_user, 15, Config);
+				CLCD_I2C_WriteString(LCD_user, "<");
+				if(Enter)
+				{
+					Enter = 0;
+					if(Config == CONFIG_ROW1)
+                    {
+                        Index_mode = INDEX_MODE1;
+                        delete = 1;
+//                        Enter = 0;
+                    }
+					if(Config == CONFIG_ROW2)
+                    {
+                        Index_mode = INDEX_MODE2;
+                        delete = 1;
+//                        Enter = 0;
+                    }
+					if(Config == CONFIG_ROW3)
+                    {
+                        Index_mode = INDEX_MODE1;
+                        Mode = 0;
+                        Config = CONFIG_ROW1;
+//                        Status_Display = 0;
+//                        counter = 0;
+                        delete = 1;
+//                        Enter = 0;
+                    }
+				} /*END if(Enter)*/
+			}
+			else
+			{
+				Enter = 0;
+			}
+			lcd_user_display(LCD_user, Status_Display);
+		} /*END if(Index_mode == 0)*/
+		else if(INDEX_MODE1 == Index_mode)
+		{
+
+		}
+	}
+}
