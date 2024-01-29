@@ -59,23 +59,23 @@ static void MX_I2C1_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	static uint32_t TimeBegin = 0;
-	static uint32_t TimeNow = 0;
+//	static uint32_t TimeBegin = 0;
+//	static uint32_t TimeNow = 0;
 	/*CODE ISR*/
 	flag_button = 1;
-	if(UP_EXTI11_Pin == GPIO_Pin)
+	if(UP_EXTI_3_Pin == GPIO_Pin)
 	{
 //		flag_button = 1;
 		Config++;
 		if(Config > CONFIG_ROW3) Config = CONFIG_ROW1;
 	}
-	if(DOWN_EXTI12_Pin == GPIO_Pin)
+	if(DOWN_EXTI_4_Pin == GPIO_Pin)
 	{
 //		flag_button = 1;
 		Config--;
 		if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
 	}
-	if(SELECT_EXTI15_Pin == GPIO_Pin)
+	if(ENTER_EXTI_5_Pin == GPIO_Pin)
 	{
 		if(1 == Mode)
 		{
@@ -85,24 +85,24 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		{
 			Mode = 1;
 		}
-
 	}
 	/*END CODE ISR*/
-	HAL_Delay(70);
-	TimeBegin = HAL_GetTick();
-	while(		HAL_GPIO_ReadPin(GPIOA, UP_EXTI11_Pin) == GPIO_PIN_RESET		\
-			|| 	HAL_GPIO_ReadPin(GPIOA, DOWN_EXTI12_Pin) == GPIO_PIN_RESET 		\
-			|| 	HAL_GPIO_ReadPin(GPIOA, SELECT_EXTI15_Pin) == GPIO_PIN_RESET)	\
+	HAL_Delay(40);
+//	TimeBegin = HAL_GetTick();
+	while(		HAL_GPIO_ReadPin(UP_EXTI_3_GPIO_Port, UP_EXTI_3_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(DOWN_EXTI_4_GPIO_Port, DOWN_EXTI_4_Pin) == GPIO_PIN_RESET 		\
+			|| 	HAL_GPIO_ReadPin(ENTER_EXTI_5_GPIO_Port, ENTER_EXTI_5_Pin) == GPIO_PIN_RESET
+		 )
 	{
-		TimeNow = HAL_GetTick();
-		if(TimeNow - TimeBegin == 5000)
-		{
-//			ButtonError = 1;
-			break;
-		}
+//		TimeNow = HAL_GetTick();
+//		if(TimeNow - TimeBegin >= 5000)
+//		{
+////			ButtonError = 1;
+//			break;
+//		}
 	}
-	HAL_Delay(70);
-	EXTI->PR = GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_15;
+	HAL_Delay(40);
+	EXTI->PR = UP_EXTI_3_Pin | DOWN_EXTI_4_Pin | ENTER_EXTI_5_Pin;
 }
 /* USER CODE END 0 */
 
@@ -145,6 +145,7 @@ int main(void)
   while (1)
   {
 	  lcd_system_handler(&LCD1);
+//	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -237,21 +238,21 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pin : PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : UP_EXTI11_Pin DOWN_EXTI12_Pin SELECT_EXTI15_Pin */
-  GPIO_InitStruct.Pin = UP_EXTI11_Pin|DOWN_EXTI12_Pin|SELECT_EXTI15_Pin;
+  /*Configure GPIO pins : UP_EXTI_3_Pin DOWN_EXTI_4_Pin ENTER_EXTI_5_Pin */
+  GPIO_InitStruct.Pin = UP_EXTI_3_Pin|DOWN_EXTI_4_Pin|ENTER_EXTI_5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

@@ -1,5 +1,2 @@
-lcd_user.c:21:13:lcd_user_display	8
-lcd_user.c:118:6:lcd_system_handler	23
-lcd_user.c:269:6:lcd_reset_display	1
-lcd_user.c:273:6:lcd_display_EnterCheck_password	1
-lcd_user.c:277:6:lcd_display_EnterCheck_number	1
+lcd_user.c:33:6:lcd_user_display	15
+lcd_user.c:216:6:lcd_system_handler	25
