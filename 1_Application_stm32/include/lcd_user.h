@@ -43,13 +43,27 @@ typedef enum
 	ENGLISH = 1
 } LANGUAGE_TYPEDEF;
 
+enum
+{
+	PROCESSING = 0,
+	NOT_DONE = 1
+};
+
+typedef struct
+{
+	uint8_t signal_enter_pass;
+	uint8_t signal_enter_num;
+} enter_num_pass_typedef;
+
 
 extern volatile STATUS_CONFIG_TYPEDEF Config;
 extern volatile uint8_t Enter;
 extern volatile uint8_t flag_button;
 extern volatile uint8_t Mode;
 
-//void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display);
+extern volatile enter_num_pass_typedef enter_num_pass;
+
+void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display);
 void lcd_system_handler(CLCD_I2C_Name* LCD_user);
 
 #endif /* _LCD_USER_H_ */

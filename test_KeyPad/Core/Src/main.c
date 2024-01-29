@@ -52,13 +52,54 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
+
+PIN_Rx_INPUT_TYPEDEF state_flag_rx;
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	static uint32_t TimeBegin = 0;
+	static uint32_t TimeNow = 0;
+	if(GPIO_PIN_15 == GPIO_Pin)
+	{
+		state_flag_rx.flag_input_4r = 1;
+	}
+	else if(GPIO_PIN_14 == GPIO_Pin)
+	{
+		state_flag_rx.flag_input_4r = 1;
+	}
+	else if(GPIO_PIN_13 == GPIO_Pin)
+	{
+		state_flag_rx.flag_input_4r = 1;
+	}
+	else if(GPIO_PIN_12 == GPIO_Pin)
+	{
+		state_flag_rx.flag_input_4r = 1;
+	}
+	HAL_Delay(70);
+	TimeBegin = HAL_GetTick();
+	while(		HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET 		\
+			|| 	HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET	    \
+			|| 	HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET)
+	{
+		TimeNow = HAL_GetTick();
+		if(TimeNow - TimeBegin == 5000)
+		{
+//			ButtonError = 1;
+			break;
+		}
+	}
+	HAL_Delay(70);
+	EXTI->PR = GPIO_PIN_13 | GPIO_PIN_12 | GPIO_PIN_15 | GPIO_PIN_14;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
-GPIO_ROW_TYPEDEF ROW_KEY_PAD_main;
+GPIO_COLUMN_TYPEDEF 	COL_KEY_PAD_main;
+GPIO_ROW_TYPEDEF 		ROW_KEY_PAD_main;
 char key = 0;
+uint8_t row = 9 - 1;
 /* USER CODE END 0 */
 
 /**
@@ -102,7 +143,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  key = KEYPAD_Read(&COL_KEY_PAD_main, &ROW_KEY_PAD_main);
+//	  key = KEYPAD_Read(&COL_KEY_PAD_main, &ROW_KEY_PAD_main);
+	  if(state_flag_rx.flag_input_4r == 1)
+	  {
+		  state_flag_rx.flag_input_4r = 0;
+//		  key = KEYPAD_Read(&COL_KEY_PAD_main, &state_flag_rx, &row);
+		  key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main, &row);
+	  }
+//	  check_keypad = HAL_GPIO_ReadPin(GPIOx, GPIO_Pin)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -196,30 +244,24 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, C4_OUT_Pin|C3_OUT_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, C2_OUT_Pin|C1_OUT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : R4_IN_Pin R3_IN_Pin R2_IN_Pin R1_IN_Pin */
   GPIO_InitStruct.Pin = R4_IN_Pin|R3_IN_Pin|R2_IN_Pin|R1_IN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : C4_OUT_Pin C3_OUT_Pin */
-  GPIO_InitStruct.Pin = C4_OUT_Pin|C3_OUT_Pin;
+  /*Configure GPIO pins : C4_OUT_Pin C3_OUT_Pin C2_OUT_Pin C1_OUT_Pin */
+  GPIO_InitStruct.Pin = C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : C2_OUT_Pin C1_OUT_Pin */
-  GPIO_InitStruct.Pin = C2_OUT_Pin|C1_OUT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

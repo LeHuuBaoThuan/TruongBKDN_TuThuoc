@@ -1,10 +1,12 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_lcd Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_fetDC Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_KeyPad Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_lcd Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:TuThuoc_main Debug
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:TuThuoc\ Debug/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:TuThuoc\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:TuThuoc_main\ Debug/activeLaunchMode=debug
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:TuThuoc_main\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_KeyPad\ Debug/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_KeyPad\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:test_lcd\ Debug/activeLaunchMode=debug
