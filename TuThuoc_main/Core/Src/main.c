@@ -74,7 +74,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	static uint32_t TimeNow = 0;
 	/*CODE ISR*/
 	/*flag keypad*/
-	if((C1_OUT_Pin == GPIO_Pin) | (C2_OUT_Pin == GPIO_Pin) | (C3_OUT_Pin == GPIO_Pin) | (C4_OUT_Pin == GPIO_Pin))
+	if((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin))
 	{
 		flag_keypad = 1;
 	}
@@ -107,10 +107,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	while(		HAL_GPIO_ReadPin(GPIOB, UP_EXTI_3_Pin) == GPIO_PIN_RESET		\
 			|| 	HAL_GPIO_ReadPin(GPIOB, DOWN_EXTI_4_Pin) == GPIO_PIN_RESET 		\
 			|| 	HAL_GPIO_ReadPin(GPIOB, ENTER_EXTI_5_Pin) == GPIO_PIN_RESET		\
-			|| 	HAL_GPIO_ReadPin(C1_OUT_GPIO_Port, C1_OUT_Pin) == GPIO_PIN_RESET		\
-			|| 	HAL_GPIO_ReadPin(C2_OUT_GPIO_Port, C2_OUT_Pin) == GPIO_PIN_RESET 		\
-			|| 	HAL_GPIO_ReadPin(C3_OUT_GPIO_Port, C3_OUT_Pin) == GPIO_PIN_RESET		\
-			|| 	HAL_GPIO_ReadPin(C4_OUT_GPIO_Port, C4_OUT_Pin) == GPIO_PIN_RESET)
+			|| 	HAL_GPIO_ReadPin(R1_IN_GPIO_Port, R1_IN_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(R2_IN_GPIO_Port, R2_IN_Pin) == GPIO_PIN_RESET 		\
+			|| 	HAL_GPIO_ReadPin(R3_IN_GPIO_Port, R3_IN_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(R4_IN_GPIO_Port, R4_IN_Pin) == GPIO_PIN_RESET)
 	{
 		TimeNow = HAL_GetTick();
 		if(TimeNow - TimeBegin == 5000)
@@ -120,7 +120,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 	}
 	HAL_Delay(20);
-	EXTI->PR = GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_15 | C1_OUT_Pin | C2_OUT_Pin |C3_OUT_Pin | C4_OUT_Pin;
+	EXTI->PR = ENTER_EXTI_5_Pin | DOWN_EXTI_4_Pin | UP_EXTI_3_Pin \
+			| R1_IN_Pin | R2_IN_Pin |R3_IN_Pin | R4_IN_Pin;
 }
 /* USER CODE END 0 */
 
@@ -176,6 +177,9 @@ int main(void)
 		  key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main, &row);
 	  }
 	  lcd_system_handler(&LCD1);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -298,8 +302,12 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, R7_Pin|R6_Pin|R5_Pin|R4_Pin
@@ -307,6 +315,13 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : R7_Pin R6_Pin R5_Pin R4_Pin
                            R3_Pin R2_Pin R1_Pin C1_OUT_Pin */

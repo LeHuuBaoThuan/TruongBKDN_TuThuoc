@@ -136,7 +136,7 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 		else if(status_display == STATUS_2)
 		{
 			// dislay Select Mode ! Status_Display=1
-			CLCD_I2C_SetCursor(LCD_user, 3, 0);
+			CLCD_I2C_SetCursor(LCD_user, 0, 0);
 			CLCD_I2C_WriteString(LCD_user,"Lua chon che do:");
 
 			CLCD_I2C_SetCursor(LCD_user, 0, 1);

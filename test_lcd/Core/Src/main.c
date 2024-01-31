@@ -45,6 +45,7 @@ I2C_HandleTypeDef hi2c1;
 /* USER CODE BEGIN PV */
 uint8_t state_lcd = 0;
 uint8_t Status_Display_1 = 0;
+uint8_t lcd_on_off = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -144,7 +145,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  lcd_system_handler(&LCD1);
+	  if(lcd_on_off)
+	  {
+		  lcd_system_handler(&LCD1);
+	  }
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+	  HAL_Delay(1000);
 //	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
@@ -235,8 +241,19 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : UP_EXTI_3_Pin DOWN_EXTI_4_Pin ENTER_EXTI_5_Pin */
   GPIO_InitStruct.Pin = UP_EXTI_3_Pin|DOWN_EXTI_4_Pin|ENTER_EXTI_5_Pin;
