@@ -34,6 +34,8 @@ typedef enum
 	INDEX_MODE1 = 1,
 	INDEX_MODE2 = 2,
 	INDEX_MODE3 = 3,
+	INDEX_MODE_OKE_PASS = 4,
+	INDEX_MODE_NO_OKE_PASS,
 	INDEX_MODE_NONE = 0
 } INDEX_MODE_TYPEDEF;
 
@@ -68,6 +70,8 @@ extern volatile uint8_t flag_button;
 extern volatile uint8_t Mode;
 extern volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass;
 extern volatile enter_num_pass_typedef enter_num_pass;
+
+extern INDEX_MODE_TYPEDEF Index_mode;
 
 void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display);
 void lcd_system_handler(CLCD_I2C_Name* LCD_user);

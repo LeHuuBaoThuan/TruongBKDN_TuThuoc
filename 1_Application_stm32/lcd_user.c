@@ -18,7 +18,8 @@ volatile enter_num_pass_typedef enter_num_pass = {NOT_DONE, NOT_DONE};
 volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass = STAR;
 
 
-static INDEX_MODE_TYPEDEF Index_mode = 0;
+//static INDEX_MODE_TYPEDEF Index_mode = 0;
+INDEX_MODE_TYPEDEF Index_mode = 0;
 static uint8_t Status_Display = 0;
 static LANGUAGE_TYPEDEF language = VIETNAMESE;
 //==============================================================================================================================================================
@@ -81,15 +82,15 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 					CLCD_I2C_WriteString(LCD_user,">");
 				}
 				CLCD_I2C_SetCursor(LCD_user, 0, 2);
-				CLCD_I2C_WriteString(LCD_user,"Password: ");
+				CLCD_I2C_WriteString(LCD_user,"PIN: ");
 				if(state_star_pass == STAR)
 				{
-					CLCD_I2C_SetCursor(LCD_user, 6, 2);
+					CLCD_I2C_SetCursor(LCD_user, 8, 2);
 					CLCD_I2C_WriteString(LCD_user,">*****");
 				}
 				else
 				{
-					CLCD_I2C_SetCursor(LCD_user, 6, 2);
+					CLCD_I2C_SetCursor(LCD_user, 8, 2);
 					CLCD_I2C_WriteString(LCD_user,">");
 				}
 				CLCD_I2C_SetCursor(LCD_user, 0, 3);
@@ -186,12 +187,12 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 			CLCD_I2C_WriteString(LCD_user,"PIN: ");
 			if(state_star_pass == STAR)
 			{
-				CLCD_I2C_SetCursor(LCD_user, 6, 2);
+				CLCD_I2C_SetCursor(LCD_user, 8, 2);
 				CLCD_I2C_WriteString(LCD_user,">*****");
 			}
 			else
 			{
-				CLCD_I2C_SetCursor(LCD_user, 6, 2);
+				CLCD_I2C_SetCursor(LCD_user, 8, 2);
 				CLCD_I2C_WriteString(LCD_user,">");
 			}
 			CLCD_I2C_SetCursor(LCD_user, 0, 3);
@@ -396,5 +397,31 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 			}
 			lcd_user_display(LCD_user, Status_Display);
 		} /*END if(Index_mode == INDEX_MODE2)*/
+		else if(INDEX_MODE_OKE_PASS == Index_mode)
+		{
+			Status_Display = STATUS_4;
+			lcd_user_display(LCD_user, Status_Display);
+			if(Enter)
+            {
+                Index_mode = INDEX_MODE_NONE;
+//                        Mode = 0;
+                Config = CONFIG_NONE;
+                Status_Display = STATUS_2;
+                delete = 1;
+            }
+		}
+		else if(INDEX_MODE_NO_OKE_PASS == Index_mode)
+		{
+			Status_Display = STATUS_5;
+			lcd_user_display(LCD_user, Status_Display);
+			if(Enter)
+            {
+                Index_mode = INDEX_MODE_NONE;
+//                        Mode = 0;
+                Config = CONFIG_NONE;
+                Status_Display = STATUS_2;
+                delete = 1;
+            }
+		}
 	}/*END if(Mode == 1)*/
 }

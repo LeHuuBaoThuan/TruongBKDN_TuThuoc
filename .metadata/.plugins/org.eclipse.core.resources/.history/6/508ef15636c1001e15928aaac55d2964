@@ -1,0 +1,70 @@
+/*
+ * handler.h
+ *
+ *  Created on: 31 Jan 2024
+ *      Author: BaoThuan
+ */
+
+#ifndef _HANDLER_KEYIN_H_
+#define _HANDLER_KEYIN_H_
+
+#include "stm32f1xx_hal.h"
+#include <KeyPad.h>
+#include<lcd_user.h>
+
+void handler_keyIN_handler()
+{
+	  if(enter_num_pass.signal_enter_pass == PROCESSING)	// Được thay đổi trong lcd.c
+	  {
+		  CLCD_I2C_SetCursor(&LCD1, row_key_password, 2);
+		  CLCD_I2C_WriteChar(&LCD1, key);
+
+		  password[row_key_password - 7] = key;
+		  row_key_password++;
+		  key = KEYPAD_NOT_PRESSED;
+
+		  if(row_key_password > SIZE_ROW_PASS)
+		  {
+			  enter_num_pass.signal_enter_pass = NOT_DONE;
+
+			  state_button = BUTTON;
+			  /*Neu Mang hinh nhap du 5 so*/
+			  /*reset mang hinh*/
+			  CLCD_I2C_Clear(&LCD1);
+
+			  state_star_pass = STAR;
+			  row_key_password = 7;
+			  for(uint8_t i = 0; i <= sizeof(password); i++)
+			  {
+				  password[i] = 0;
+			  }
+		  }
+	  }
+	  if(enter_num_pass.signal_enter_num == PROCESSING)
+	  {
+		  CLCD_I2C_SetCursor(&LCD1, row_key_num, 1);
+		  CLCD_I2C_WriteChar(&LCD1, key);
+
+		  password[row_key_num - 1] = key;
+		  row_key_num++;
+		  key = KEYPAD_NOT_PRESSED;
+
+		  if(row_key_num > SIZE_ROW_NUM)
+		  {
+			  enter_num_pass.signal_enter_num = NOT_DONE;
+
+			  state_button = BUTTON;
+			  /*Neu Mang hinh nhap du 5 so*/
+			  /*reset mang hinh*/
+			  CLCD_I2C_Clear(&LCD1);
+
+			  state_star_pass = STAR;
+			  row_key_num = 1;
+			  for(uint8_t i = 0; i <= sizeof(password); i++)
+			  {
+				  password[i] = 0;
+			  }
+		  }
+	  }
+}
+#endif /* _HANDLER_KEYIN_H_ */

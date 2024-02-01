@@ -1,0 +1,18 @@
+/*
+ * handler.h
+ *
+ *  Created on: 31 Jan 2024
+ *      Author: BaoThuan
+ */
+
+#ifndef _HANDLER_KEYIN_H_
+#define _HANDLER_KEYIN_H_
+
+#include "stm32f1xx_hal.h"
+#include <KeyPad.h>
+#include<lcd_user.h>
+
+uint8_t row_key_num = 1;
+uint8_t row_key_password = 7;
+
+#endif /* _HANDLER_KEYIN_H_ */

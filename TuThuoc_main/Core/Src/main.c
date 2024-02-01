@@ -24,12 +24,12 @@
 #include<KeyPad.h>
 #include<lcd_user.h>
 #include<relay.h>
+#include <handler_keyIN.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define SIZE_ROW_NUM 1+3-1
-#define SIZE_ROW_PASS 7+5-1
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -61,21 +61,29 @@ static void MX_I2C2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-typedef enum
-{
-	KEYPAD = 0,
-	BUTTON = 1
-} STATE_SELECT_BUTTON_HANDLER_TYPEDEF;
-
 STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button = BUTTON;
+
+
 GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
 GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
+
 char key = 0;
 
-uint8_t row_key_num = 1;
-uint8_t row_key_password = 7;
-uint8_t size_row_pass = 5;
-uint8_t password[5] = {0};
+//STATE_KEY state_enter_5_key = KEY_NOT;
+
+//uint8_t size_row_pass = 5;
+char password[5] = {0};
+uint8_t num_ok = 0;
+/*test pass*/
+char num1[3] = "012";
+char pass1[5] = "12321";
+
+char num2[3] = "211";
+char pass2[5] = "12345";
+
+char num3[3] = "234";
+char pass3[5] = "13579";
+
 volatile uint8_t flag_keypad = 0;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -188,88 +196,61 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  /*Debug key*/
 	  if(flag_keypad == 1)
 	  {
 		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		  flag_keypad = 0;
 	  }
 
-	  /*test keypad screen lcd*/
-	  if(key != KEYPAD_NOT_PRESSED)	//when state_button = KEYPAD
+	  /*Enter key and display on LCD pass/num*/
+	  if(handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, password) == KEY_OK)
 	  {
-		  if(enter_num_pass.signal_enter_pass == PROCESSING)
-		  {
-			  CLCD_I2C_SetCursor(&LCD1, row_key_password, 2);
-			  CLCD_I2C_WriteChar(&LCD1, key);
-
-			  password[row_key_password - 7] = key;
-			  row_key_password++;
-			  key = KEYPAD_NOT_PRESSED;
-
-			  if(row_key_password > SIZE_ROW_PASS)
-			  {
-				  enter_num_pass.signal_enter_pass = NOT_DONE;
-
-				  state_button = BUTTON;
-				  /*Neu Mang hinh nhap du 5 so*/
-				  /*reset mang hinh*/
-				  CLCD_I2C_Clear(&LCD1);
-
-				  state_star_pass = STAR;
-				  row_key_password = 7;
-				  for(uint8_t i = 0; i <= sizeof(password); i++)
-				  {
-					  password[i] = 0;
-				  }
-			  }
-		  }
 		  if(enter_num_pass.signal_enter_num == PROCESSING)
 		  {
-			  CLCD_I2C_SetCursor(&LCD1, row_key_num, 1);
-			  CLCD_I2C_WriteChar(&LCD1, key);
-
-			  password[row_key_num - 1] = key;
-			  row_key_num++;
-			  key = KEYPAD_NOT_PRESSED;
-
-			  if(row_key_num > SIZE_ROW_NUM)
+			  enter_num_pass.signal_enter_num = NOT_DONE;
+			  if(strstr(password, num1) != NULL || strstr(password, num2) != NULL || strstr(password, num3) != NULL)
 			  {
-				  enter_num_pass.signal_enter_num = NOT_DONE;
-
-				  state_button = BUTTON;
-				  /*Neu Mang hinh nhap du 5 so*/
-				  /*reset mang hinh*/
-				  CLCD_I2C_Clear(&LCD1);
-
-				  state_star_pass = STAR;
-				  row_key_num = 1;
-				  for(uint8_t i = 0; i <= sizeof(password); i++)
-				  {
-					  password[i] = 0;
-				  }
+				  num_ok = 1;
 			  }
+			  else
+			  {
+				  num_ok = 0;
+				  Index_mode = INDEX_MODE_NO_OKE_PASS;
+			  }
+		  }
+		  else if(enter_num_pass.signal_enter_pass == PROCESSING && num_ok == 1)
+		  {
+			  enter_num_pass.signal_enter_pass = NOT_DONE;
+			  if(strstr(password, pass1) != NULL || strstr(password, pass2) != NULL || strstr(password, pass3) != NULL)
+			  {
+			  	  Index_mode = INDEX_MODE_OKE_PASS;
+			  }
+			  else
+			  {
+			  	  Index_mode = INDEX_MODE_NO_OKE_PASS;
+			  }
+		  }
+		  else
+		  {
+			  Index_mode = INDEX_MODE_NO_OKE_PASS;
+		  }
+		  /*Reset*/
+		  for(uint8_t i = 0; i < sizeof(password); i++)
+		  {
+			  password[i] = 0;
 		  }
 	  }
 
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
 	  {
 		  state_star_pass = NONE_STAR;
-		  if(enter_num_pass.signal_enter_pass == PROCESSING)
-		  {
-			  CLCD_I2C_SetCursor(&LCD1, 0, 1);
-		  }
-		  if(enter_num_pass.signal_enter_num == PROCESSING)
-		  {
-			  CLCD_I2C_SetCursor(&LCD1, 6, 3);
-		  }
-		  CLCD_I2C_WriteChar(&LCD1, '>');
 		  state_button = KEYPAD;
 	  }
 	  else
 	  {
 		  state_button = BUTTON;
 	  }
-
 
 	  lcd_system_handler(&LCD1);
     /* USER CODE END WHILE */

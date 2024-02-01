@@ -51,6 +51,12 @@ typedef struct
 	uint8_t flag_input_r4;
 } PIN_Rx_INPUT_TYPEDEF;
 
+typedef enum
+{
+	KEYPAD = 0,
+	BUTTON = 1
+} STATE_SELECT_BUTTON_HANDLER_TYPEDEF;
+
 void KeyPad_Init(	GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD,
 					GPIO_TypeDef* C_port0, GPIO_TypeDef* C_port1, GPIO_TypeDef* C_port2, GPIO_TypeDef* C_port3,\
 					uint16_t C_pin0, uint16_t C_pin1, uint16_t C_pin2, uint16_t C_pin3,\
