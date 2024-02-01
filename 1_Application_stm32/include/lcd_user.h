@@ -49,6 +49,12 @@ enum
 	NOT_DONE = 1
 };
 
+typedef enum
+{
+	STAR = 0,
+	NONE_STAR = 1
+} STATE_SCREEN_STAR_PASS_TYPEDEF;
+
 typedef struct
 {
 	uint8_t signal_enter_pass;
@@ -60,7 +66,7 @@ extern volatile STATUS_CONFIG_TYPEDEF Config;
 extern volatile uint8_t Enter;
 extern volatile uint8_t flag_button;
 extern volatile uint8_t Mode;
-
+extern volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass;
 extern volatile enter_num_pass_typedef enter_num_pass;
 
 void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display);

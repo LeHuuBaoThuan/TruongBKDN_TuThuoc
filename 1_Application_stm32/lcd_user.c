@@ -14,7 +14,8 @@ volatile STATUS_CONFIG_TYPEDEF Config = CONFIG_ROW1;
 
 volatile uint8_t Enter = 0;
 volatile uint8_t flag_button = 0;
-volatile enter_num_pass_typedef enter_num_pass;
+volatile enter_num_pass_typedef enter_num_pass = {NOT_DONE, NOT_DONE};
+volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass = STAR;
 
 
 static INDEX_MODE_TYPEDEF Index_mode = 0;
@@ -69,7 +70,16 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				// dislay Select cycle ! Status_Display =2
 				CLCD_I2C_SetCursor(LCD_user, 0, 0);
 				CLCD_I2C_WriteString(LCD_user,"Enter ur number:");
-
+				if(state_star_pass == STAR)
+				{
+					CLCD_I2C_SetCursor(LCD_user, 0, 1);
+					CLCD_I2C_WriteString(LCD_user,">*****");
+				}
+				else
+				{
+					CLCD_I2C_SetCursor(LCD_user, 0, 1);
+					CLCD_I2C_WriteString(LCD_user,">");
+				}
 				CLCD_I2C_SetCursor(LCD_user, 0, 2);
 				CLCD_I2C_WriteString(LCD_user,"Password: ");
 
@@ -152,8 +162,17 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 		{
 			// dislay Select cycle ! Status_Display =2
 			CLCD_I2C_SetCursor(LCD_user, 0, 0);
-			CLCD_I2C_WriteString(LCD_user,"Nhap stt cua ban:");
-
+			CLCD_I2C_WriteString(LCD_user,"Nhap stt cua ban");
+			if(state_star_pass == STAR)
+			{
+				CLCD_I2C_SetCursor(LCD_user, 0, 1);
+				CLCD_I2C_WriteString(LCD_user,">*****");
+			}
+			else
+			{
+				CLCD_I2C_SetCursor(LCD_user, 0, 1);
+				CLCD_I2C_WriteString(LCD_user,">");
+			}
 			CLCD_I2C_SetCursor(LCD_user, 0, 2);
 			CLCD_I2C_WriteString(LCD_user,"PIN: ");
 
@@ -334,11 +353,11 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 				if(Enter)
 				{
 					Enter = 0;
-					if(Config == CONFIG_ROW1)
+					if(Config == CONFIG_ROW1)	// Nhap so thu tu
                     {
 						enter_num_pass.signal_enter_num = PROCESSING;
                     }
-					if(Config == CONFIG_ROW2)
+					if(Config == CONFIG_ROW2)	// Nhap pass
                     {
 						enter_num_pass.signal_enter_pass = PROCESSING;
                     }

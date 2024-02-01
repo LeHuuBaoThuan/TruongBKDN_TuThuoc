@@ -1,6 +1,11 @@
 #include "KeyPad.h"
 
 /* Keypad Button Values*/
+//const char Keypad_Button_Values[4][4] =  {    {'1', '4', '7', '*'},
+//											  {'2', '5', '8', '0'},
+//											  {'3', '6', '9', '#'},
+//											  {'A', 'B', 'C', 'D'},
+//                                         };
 const char Keypad_Button_Values[4][4] =  {    {'1', '2', '3', 'A'},
 											  {'4', '5', '6', 'B'},
 											  {'7', '8', '9', 'C'},
@@ -158,9 +163,9 @@ char KEYPAD_Handler(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_
 {
 	char key = KEYPAD_Read(COL_KEY_PAD, ROW_KEY_PAD_main, row);;
 
-    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO0, COL_KEY_PAD->PIN.GPIO_PIN_A, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO1, COL_KEY_PAD->PIN.GPIO_PIN_B, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO2, COL_KEY_PAD->PIN.GPIO_PIN_C, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO3, COL_KEY_PAD->PIN.GPIO_PIN_D, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO0, COL_KEY_PAD->PIN.GPIO_PIN_A, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO1, COL_KEY_PAD->PIN.GPIO_PIN_B, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO2, COL_KEY_PAD->PIN.GPIO_PIN_C, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO3, COL_KEY_PAD->PIN.GPIO_PIN_D, GPIO_PIN_RESET);
     return key;
 }

@@ -43,8 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
-
-UART_HandleTypeDef huart1;
+I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN PV */
 
@@ -54,17 +53,26 @@ UART_HandleTypeDef huart1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_USART1_UART_Init(void);
+static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+typedef enum
+{
+	KEYPAD = 0,
+	BUTTON = 1
+} STATE_SELECT_BUTTON_HANDLER_TYPEDEF;
+
+STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button = BUTTON;
 GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
 GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
 char key = 0;
-uint8_t row = 9 - 1;
+uint8_t row = 0;
+uint8_t row_password = 1;
+uint8_t size_row_pass = 5;
 uint8_t password[5] = {0};
 volatile uint8_t flag_keypad = 0;
 
@@ -74,31 +82,35 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	static uint32_t TimeNow = 0;
 	/*CODE ISR*/
 	/*flag keypad*/
-	if((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin))
+	if(((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin)) && (state_button == KEYPAD))
 	{
 		flag_keypad = 1;
+		key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main, &row);
 	}
 	/*flag lcd*/
-	flag_button = 1;
-	if(UP_EXTI_3_Pin == GPIO_Pin)
+	if(state_button == BUTTON)
 	{
-		Config++;
-		if(Config > CONFIG_ROW3) Config = CONFIG_ROW1;
-	}
-	else if(DOWN_EXTI_4_Pin == GPIO_Pin)
-	{
-		Config--;
-		if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
-	}
-	else if(ENTER_EXTI_5_Pin == GPIO_Pin)
-	{
-		if(1 == Mode)
+		flag_button = 1;
+		if(UP_EXTI_3_Pin == GPIO_Pin)
 		{
-			Enter = 1;
+			Config++;
+			if(Config > CONFIG_ROW3) Config = CONFIG_ROW1;
 		}
-		else
+		else if(DOWN_EXTI_4_Pin == GPIO_Pin)
 		{
-			Mode = 1;
+			Config--;
+			if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
+		}
+		else if(ENTER_EXTI_5_Pin == GPIO_Pin)
+		{
+			if(1 == Mode)
+			{
+				Enter = 1;
+			}
+			else
+			{
+				Mode = 1;
+			}
 		}
 	}
 	/*END CODE ISR*/
@@ -154,7 +166,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_USART1_UART_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
   KeyPad_Init(		// Cpl pin + port
 				    &COL_KEY_PAD_main, &ROW_KEY_PAD_main,												\
@@ -165,6 +177,9 @@ int main(void)
 					R1_IN_Pin, R2_IN_Pin, R3_IN_Pin, R4_IN_Pin
 			  );
   CLCD_I2C_Init(&LCD1, &hi2c1, (0x27 << 1), 16, 4);
+
+  CLCD_I2C_SetCursor(&LCD1, 0, 0);
+  CLCD_I2C_WriteString(&LCD1, "Hello");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -173,13 +188,58 @@ int main(void)
   {
 	  if(flag_keypad == 1)
 	  {
+		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		  flag_keypad = 0;
-		  key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main, &row);
 	  }
+
+	  /*test keypad screen lcd*/
+	  if(key != KEYPAD_NOT_PRESSED)	//when state_button = KEYPAD
+	  {
+		  CLCD_I2C_SetCursor(&LCD1, row_password, 1);
+		  CLCD_I2C_WriteChar(&LCD1, key);
+
+		  password[row_password - 1] = key;
+		  row_password++;
+		  key = KEYPAD_NOT_PRESSED;
+
+		  if(row_password > size_row_pass)
+		  {
+			  enter_num_pass.signal_enter_pass = NOT_DONE;
+			  enter_num_pass.signal_enter_num = NOT_DONE;
+
+			  state_button = BUTTON;
+			  /*Neu Mang hinh nhap du 5 so*/
+			  /*reset mang hinh*/
+			  CLCD_I2C_Clear(&LCD1);
+
+			  state_star_pass = STAR;
+			  row_password = 1;
+			  for(uint8_t i = 0; i <= sizeof(password); i++)
+			  {
+				  password[i] = 0;
+			  }
+		  }
+	  }
+
+	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
+	  {
+//		  state_star_pass = NONE_STAR;
+//
+//		  CLCD_I2C_Clear(&LCD1);
+//
+//		  lcd_system_handler(&LCD1);
+
+		  CLCD_I2C_SetCursor(&LCD1, 0, 1);
+		  CLCD_I2C_WriteChar(&LCD1, '>');
+		  state_button = KEYPAD;
+	  }
+	  else
+	  {
+		  state_button = BUTTON;
+	  }
+
+
 	  lcd_system_handler(&LCD1);
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -258,35 +318,36 @@ static void MX_I2C1_Init(void)
 }
 
 /**
-  * @brief USART1 Initialization Function
+  * @brief I2C2 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_USART1_UART_Init(void)
+static void MX_I2C2_Init(void)
 {
 
-  /* USER CODE BEGIN USART1_Init 0 */
+  /* USER CODE BEGIN I2C2_Init 0 */
 
-  /* USER CODE END USART1_Init 0 */
+  /* USER CODE END I2C2_Init 0 */
 
-  /* USER CODE BEGIN USART1_Init 1 */
+  /* USER CODE BEGIN I2C2_Init 1 */
 
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE BEGIN I2C2_Init 2 */
 
-  /* USER CODE END USART1_Init 2 */
+  /* USER CODE END I2C2_Init 2 */
 
 }
 
@@ -311,10 +372,8 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, R7_Pin|R6_Pin|R5_Pin|R4_Pin
-                          |R3_Pin|R2_Pin|R1_Pin|C1_OUT_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin, GPIO_PIN_RESET);
+                          |R3_Pin|R2_Pin|R1_Pin|C4_OUT_Pin
+                          |C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -324,39 +383,25 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : R7_Pin R6_Pin R5_Pin R4_Pin
-                           R3_Pin R2_Pin R1_Pin C1_OUT_Pin */
+                           R3_Pin R2_Pin R1_Pin C4_OUT_Pin
+                           C3_OUT_Pin C2_OUT_Pin C1_OUT_Pin */
   GPIO_InitStruct.Pin = R7_Pin|R6_Pin|R5_Pin|R4_Pin
-                          |R3_Pin|R2_Pin|R1_Pin|C1_OUT_Pin;
+                          |R3_Pin|R2_Pin|R1_Pin|C4_OUT_Pin
+                          |C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : R4_IN_Pin */
-  GPIO_InitStruct.Pin = R4_IN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(R4_IN_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : R3_IN_Pin R2_IN_Pin R1_IN_Pin UP_EXTI_3_Pin
-                           DOWN_EXTI_4_Pin ENTER_EXTI_5_Pin */
-  GPIO_InitStruct.Pin = R3_IN_Pin|R2_IN_Pin|R1_IN_Pin|UP_EXTI_3_Pin
-                          |DOWN_EXTI_4_Pin|ENTER_EXTI_5_Pin;
+  /*Configure GPIO pins : R4_IN_Pin R3_IN_Pin R2_IN_Pin R1_IN_Pin
+                           UP_EXTI_3_Pin DOWN_EXTI_4_Pin ENTER_EXTI_5_Pin */
+  GPIO_InitStruct.Pin = R4_IN_Pin|R3_IN_Pin|R2_IN_Pin|R1_IN_Pin
+                          |UP_EXTI_3_Pin|DOWN_EXTI_4_Pin|ENTER_EXTI_5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : C4_OUT_Pin C3_OUT_Pin C2_OUT_Pin */
-  GPIO_InitStruct.Pin = C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
-
   HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 

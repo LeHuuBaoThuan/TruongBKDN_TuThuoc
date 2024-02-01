@@ -7,7 +7,8 @@ Enter
 flag_button
 language
 key
-row
-password
 enter_num_pass
-state_flag_rx
+state_button
+row_password
+password
+size_row_pass
