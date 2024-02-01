@@ -28,7 +28,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define SIZE_ROW_NUM 1+3-1
+#define SIZE_ROW_PASS 7+5-1
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -70,8 +71,9 @@ STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button = BUTTON;
 GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
 GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
 char key = 0;
-uint8_t row = 0;
-uint8_t row_password = 1;
+
+uint8_t row_key_num = 1;
+uint8_t row_key_password = 7;
 uint8_t size_row_pass = 5;
 uint8_t password[5] = {0};
 volatile uint8_t flag_keypad = 0;
@@ -85,7 +87,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin)) && (state_button == KEYPAD))
 	{
 		flag_keypad = 1;
-		key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main, &row);
+		key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main);
 	}
 	/*flag lcd*/
 	if(state_button == BUTTON)
@@ -195,41 +197,71 @@ int main(void)
 	  /*test keypad screen lcd*/
 	  if(key != KEYPAD_NOT_PRESSED)	//when state_button = KEYPAD
 	  {
-		  CLCD_I2C_SetCursor(&LCD1, row_password, 1);
-		  CLCD_I2C_WriteChar(&LCD1, key);
-
-		  password[row_password - 1] = key;
-		  row_password++;
-		  key = KEYPAD_NOT_PRESSED;
-
-		  if(row_password > size_row_pass)
+		  if(enter_num_pass.signal_enter_pass == PROCESSING)
 		  {
-			  enter_num_pass.signal_enter_pass = NOT_DONE;
-			  enter_num_pass.signal_enter_num = NOT_DONE;
+			  CLCD_I2C_SetCursor(&LCD1, row_key_password, 2);
+			  CLCD_I2C_WriteChar(&LCD1, key);
 
-			  state_button = BUTTON;
-			  /*Neu Mang hinh nhap du 5 so*/
-			  /*reset mang hinh*/
-			  CLCD_I2C_Clear(&LCD1);
+			  password[row_key_password - 7] = key;
+			  row_key_password++;
+			  key = KEYPAD_NOT_PRESSED;
 
-			  state_star_pass = STAR;
-			  row_password = 1;
-			  for(uint8_t i = 0; i <= sizeof(password); i++)
+			  if(row_key_password > SIZE_ROW_PASS)
 			  {
-				  password[i] = 0;
+				  enter_num_pass.signal_enter_pass = NOT_DONE;
+
+				  state_button = BUTTON;
+				  /*Neu Mang hinh nhap du 5 so*/
+				  /*reset mang hinh*/
+				  CLCD_I2C_Clear(&LCD1);
+
+				  state_star_pass = STAR;
+				  row_key_password = 7;
+				  for(uint8_t i = 0; i <= sizeof(password); i++)
+				  {
+					  password[i] = 0;
+				  }
+			  }
+		  }
+		  if(enter_num_pass.signal_enter_num == PROCESSING)
+		  {
+			  CLCD_I2C_SetCursor(&LCD1, row_key_num, 1);
+			  CLCD_I2C_WriteChar(&LCD1, key);
+
+			  password[row_key_num - 1] = key;
+			  row_key_num++;
+			  key = KEYPAD_NOT_PRESSED;
+
+			  if(row_key_num > SIZE_ROW_NUM)
+			  {
+				  enter_num_pass.signal_enter_num = NOT_DONE;
+
+				  state_button = BUTTON;
+				  /*Neu Mang hinh nhap du 5 so*/
+				  /*reset mang hinh*/
+				  CLCD_I2C_Clear(&LCD1);
+
+				  state_star_pass = STAR;
+				  row_key_num = 1;
+				  for(uint8_t i = 0; i <= sizeof(password); i++)
+				  {
+					  password[i] = 0;
+				  }
 			  }
 		  }
 	  }
 
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
 	  {
-//		  state_star_pass = NONE_STAR;
-//
-//		  CLCD_I2C_Clear(&LCD1);
-//
-//		  lcd_system_handler(&LCD1);
-
-		  CLCD_I2C_SetCursor(&LCD1, 0, 1);
+		  state_star_pass = NONE_STAR;
+		  if(enter_num_pass.signal_enter_pass == PROCESSING)
+		  {
+			  CLCD_I2C_SetCursor(&LCD1, 0, 1);
+		  }
+		  if(enter_num_pass.signal_enter_num == PROCESSING)
+		  {
+			  CLCD_I2C_SetCursor(&LCD1, 6, 3);
+		  }
 		  CLCD_I2C_WriteChar(&LCD1, '>');
 		  state_button = KEYPAD;
 	  }

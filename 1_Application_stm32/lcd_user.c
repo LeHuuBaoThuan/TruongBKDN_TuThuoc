@@ -73,7 +73,7 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				if(state_star_pass == STAR)
 				{
 					CLCD_I2C_SetCursor(LCD_user, 0, 1);
-					CLCD_I2C_WriteString(LCD_user,">*****");
+					CLCD_I2C_WriteString(LCD_user,">***");
 				}
 				else
 				{
@@ -82,7 +82,16 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				}
 				CLCD_I2C_SetCursor(LCD_user, 0, 2);
 				CLCD_I2C_WriteString(LCD_user,"Password: ");
-
+				if(state_star_pass == STAR)
+				{
+					CLCD_I2C_SetCursor(LCD_user, 6, 2);
+					CLCD_I2C_WriteString(LCD_user,">*****");
+				}
+				else
+				{
+					CLCD_I2C_SetCursor(LCD_user, 6, 2);
+					CLCD_I2C_WriteString(LCD_user,">");
+				}
 				CLCD_I2C_SetCursor(LCD_user, 0, 3);
 				CLCD_I2C_WriteString(LCD_user,"Exit");
 			}
@@ -166,7 +175,7 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 			if(state_star_pass == STAR)
 			{
 				CLCD_I2C_SetCursor(LCD_user, 0, 1);
-				CLCD_I2C_WriteString(LCD_user,">*****");
+				CLCD_I2C_WriteString(LCD_user,">***");
 			}
 			else
 			{
@@ -175,7 +184,16 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 			}
 			CLCD_I2C_SetCursor(LCD_user, 0, 2);
 			CLCD_I2C_WriteString(LCD_user,"PIN: ");
-
+			if(state_star_pass == STAR)
+			{
+				CLCD_I2C_SetCursor(LCD_user, 6, 2);
+				CLCD_I2C_WriteString(LCD_user,">*****");
+			}
+			else
+			{
+				CLCD_I2C_SetCursor(LCD_user, 6, 2);
+				CLCD_I2C_WriteString(LCD_user,">");
+			}
 			CLCD_I2C_SetCursor(LCD_user, 0, 3);
 			CLCD_I2C_WriteString(LCD_user,"Thoat");
 		}

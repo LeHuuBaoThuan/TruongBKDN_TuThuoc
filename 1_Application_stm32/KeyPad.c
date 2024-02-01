@@ -95,7 +95,7 @@ static char Check_Keypad_Column(GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main, uint8_t Row)
     -char check                                  	: const char Keypad_Button_Values[x][y]
     -KEYPAD_NOT_PRESSED                     		: '\0' {reason of failed)
 */
-static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main, uint8_t* row)
+static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main)
 {
     char check = 0;
     /*Set COL_1 LOW and scan all the columns*/
@@ -106,7 +106,6 @@ static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_
     check = Check_Keypad_Column(ROW_KEY_PAD_main, 1);
     if(check)
     {
-    	*row = *row + 1;
     	return check;
     }
     /*Set COL_2 LOW and scan all the columns*/
@@ -117,7 +116,6 @@ static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_
     check = Check_Keypad_Column(ROW_KEY_PAD_main, 2);
     if(check)
     {
-    	*row = *row + 1;
     	return check;
     }
     /*Set COL_3 LOW and scan all the columns*/
@@ -128,7 +126,6 @@ static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_
     check = Check_Keypad_Column(ROW_KEY_PAD_main, 3);
     if(check)
     {
-    	*row = *row + 1;
     	return check;
     }
     /*Set COL_4 LOW and scan all the columns*/
@@ -139,7 +136,6 @@ static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_
     check = Check_Keypad_Column(ROW_KEY_PAD_main, 4);
     if(check)
     {
-    	*row = *row + 1;
     	return check;
     }
     /*Key not pressed */
@@ -159,9 +155,9 @@ static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_
     -char check                                  	: const char Keypad_Button_Values[x][y]
     -KEYPAD_NOT_PRESSED                     		: '\0' {reason of failed)
 */
-char KEYPAD_Handler(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main, uint8_t* row)
+char KEYPAD_Handler(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main)
 {
-	char key = KEYPAD_Read(COL_KEY_PAD, ROW_KEY_PAD_main, row);;
+	char key = KEYPAD_Read(COL_KEY_PAD, ROW_KEY_PAD_main);;
 
     HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO0, COL_KEY_PAD->PIN.GPIO_PIN_A, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(COL_KEY_PAD->PORT.GPIO1, COL_KEY_PAD->PIN.GPIO_PIN_B, GPIO_PIN_RESET);
