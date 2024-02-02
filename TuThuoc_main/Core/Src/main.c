@@ -63,15 +63,10 @@ static void MX_I2C2_Init(void);
 /* USER CODE BEGIN 0 */
 STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button = BUTTON;
 
-
 GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
 GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
 
 char key = 0;
-
-//STATE_KEY state_enter_5_key = KEY_NOT;
-
-//uint8_t size_row_pass = 5;
 char password[5] = {0};
 
 
@@ -193,12 +188,12 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		  flag_keypad = 0;
 	  }
-
 	  /*Enter key and display on LCD pass/num*/
 	  if((handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, password) == KEY_OK))
 	  {
 		  handler_keyIN_CheckPIN_NUM(password);
 	  }
+	  /*Chuyển đổi chế độ chọn kiểu nút nhấn thao tác màng hình*/
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
 	  {
 		  state_star_pass = NONE_STAR;

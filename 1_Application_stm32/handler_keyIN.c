@@ -7,8 +7,8 @@
 
 #include <handler_keyIN.h>
 
-uint8_t row_key_num = ROW_BEGIN_KEPAD_NUM;
-uint8_t row_key_password = ROW_BEGIN_KEPAD_PASS;
+static uint8_t row_key_num 		= ROW_BEGIN_KEPAD_NUM;
+static uint8_t row_key_password 	= ROW_BEGIN_KEPAD_PASS;
 
 static uint8_t num_ok = 0;
 /*test pass*/
@@ -112,8 +112,7 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
   +) NOTE:
     - Kiểm tra num/pass và trả về khung hình OKE, Fail
   +) PARAM:
-    -void* Param1                       : pointer to anything
-    -unsigned char Param2               : 0->7
+    -char * password                       : key được nhập từ bàn phiếm khi được báo nhập đủ
   +) RETURN:
     -0                                  : done
     -else                               : reason of failed

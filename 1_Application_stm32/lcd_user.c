@@ -8,18 +8,16 @@
 #include<lcd_user.h>
 
 static uint8_t delete = 0;
+
 volatile uint8_t Mode = 0;
-
 volatile STATUS_CONFIG_TYPEDEF Config = CONFIG_ROW1;
-
 volatile uint8_t Enter = 0;
 volatile uint8_t flag_button = 0;
-volatile enter_num_pass_typedef enter_num_pass = {NOT_DONE, NOT_DONE, NOT_DONE};
-volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass = STAR;
 
-
-//static INDEX_MODE_TYPEDEF Index_mode = 0;
+enter_num_pass_typedef enter_num_pass = {NOT_DONE, NOT_DONE};
+STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass = STAR;
 INDEX_MODE_TYPEDEF Index_mode = 0;
+
 static uint8_t Status_Display = 0;
 static LANGUAGE_TYPEDEF language = VIETNAMESE;
 //==============================================================================================================================================================
@@ -265,7 +263,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 		CLCD_I2C_Clear(LCD_user);
 		delete = 0;
 	}
-	if(Mode == 0)
+	if(Mode == 0)												//Begin
 	{
 		Config = CONFIG_ROW0;
 		Enter = 0;
@@ -275,7 +273,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 	}
 	else if(Mode == 1)
 	{
-		if(Index_mode == INDEX_MODE_NONE)
+		if(Index_mode == INDEX_MODE_NONE)						//  Select modes
 		{
 //			Config = CONFIG_ROW1;
 			if (flag_button)
@@ -320,7 +318,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 			}
 			lcd_user_display(LCD_user, Status_Display);
 		} /*END if(Index_mode == INDEX_MODE_NONE)*/
-		else if(INDEX_MODE1 == Index_mode)	// Languge
+		else if(INDEX_MODE1 == Index_mode)					// Languge
 		{
 			Status_Display = STATUS_6;
 			lcd_user_display(LCD_user, Status_Display);
@@ -363,7 +361,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 			}
 			lcd_user_display(LCD_user, Status_Display);
 		} /*END if(Index_mode == INDEX_MODE1)*/
-		else if(INDEX_MODE2 == Index_mode)	// Enter Password
+		else if(INDEX_MODE2 == Index_mode)						// Enter Password
 		{
 			Status_Display = STATUS_3;
 			lcd_user_display(LCD_user, Status_Display);
@@ -404,7 +402,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 			}
 			lcd_user_display(LCD_user, Status_Display);
 		} /*END if(Index_mode == INDEX_MODE2)*/
-		else if(INDEX_MODE_OKE_PASS == Index_mode)
+		else if(INDEX_MODE_OKE_PASS == Index_mode)					// Pass oke
 		{
 			Status_Display = STATUS_4;
 			lcd_user_display(LCD_user, Status_Display);
@@ -417,7 +415,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
                 delete = 1;
             }
 		}
-		else if(INDEX_MODE_NO_OKE_PASS == Index_mode)
+		else if(INDEX_MODE_NO_OKE_PASS == Index_mode)				// Pass fail
 		{
 			Status_Display = STATUS_5;
 			lcd_user_display(LCD_user, Status_Display);

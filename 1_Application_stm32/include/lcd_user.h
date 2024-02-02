@@ -34,12 +34,12 @@ typedef enum
 
 typedef enum
 {
+	INDEX_MODE_NONE = 0,
 	INDEX_MODE1 = 1,
 	INDEX_MODE2 = 2,
 	INDEX_MODE3 = 3,
 	INDEX_MODE_OKE_PASS = 4,
-	INDEX_MODE_NO_OKE_PASS,
-	INDEX_MODE_NONE = 0
+	INDEX_MODE_NO_OKE_PASS
 } INDEX_MODE_TYPEDEF;
 
 typedef enum
@@ -64,18 +64,18 @@ typedef struct
 {
 	uint8_t signal_enter_pass;
 	uint8_t signal_enter_num;
-	uint8_t signal_enter_OKE;
 } enter_num_pass_typedef;
 
 
-extern volatile STATUS_CONFIG_TYPEDEF Config;
-extern volatile uint8_t Enter;
-extern volatile uint8_t flag_button;
-extern volatile uint8_t Mode;
-extern volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass;
-extern volatile enter_num_pass_typedef enter_num_pass;
+extern volatile STATUS_CONFIG_TYPEDEF Config;							// Điểu chỉnh "<" lên xuống để chọn chế độ thao tác
+extern volatile uint8_t Enter;											// Chọn chế độ
+extern volatile uint8_t flag_button;									// Biết nút có được nhấn hay chưa?
+extern volatile uint8_t Mode;											// giao diện chính mode = 0
 
-extern INDEX_MODE_TYPEDEF Index_mode;
+extern STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass;					// Dấu sao ko được hiển thị chòng khi đang nhập mk
+extern enter_num_pass_typedef enter_num_pass;							// Cờ được bật khi chọn 1 trong 2 lựa chọn nhập mk, num
+
+extern INDEX_MODE_TYPEDEF Index_mode;									// Lựa chọn khung màng hình hiển thị và thao tác trên đó
 
 void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_display);
 void lcd_system_handler(CLCD_I2C_Name* LCD_user);
