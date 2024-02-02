@@ -73,16 +73,7 @@ char key = 0;
 
 //uint8_t size_row_pass = 5;
 char password[5] = {0};
-uint8_t num_ok = 0;
-/*test pass*/
-char num1[3] = "012";
-char pass1[5] = "12321";
 
-char num2[3] = "211";
-char pass2[5] = "12345";
-
-char num3[3] = "234";
-char pass3[5] = "13579";
 
 volatile uint8_t flag_keypad = 0;
 
@@ -206,40 +197,7 @@ int main(void)
 	  /*Enter key and display on LCD pass/num*/
 	  if(handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, password) == KEY_OK)
 	  {
-		  if(enter_num_pass.signal_enter_num == PROCESSING)
-		  {
-			  enter_num_pass.signal_enter_num = NOT_DONE;
-			  if(strstr(password, num1) != NULL || strstr(password, num2) != NULL || strstr(password, num3) != NULL)
-			  {
-				  num_ok = 1;
-			  }
-			  else
-			  {
-				  num_ok = 0;
-				  Index_mode = INDEX_MODE_NO_OKE_PASS;
-			  }
-		  }
-		  else if(enter_num_pass.signal_enter_pass == PROCESSING && num_ok == 1)
-		  {
-			  enter_num_pass.signal_enter_pass = NOT_DONE;
-			  if(strstr(password, pass1) != NULL || strstr(password, pass2) != NULL || strstr(password, pass3) != NULL)
-			  {
-			  	  Index_mode = INDEX_MODE_OKE_PASS;
-			  }
-			  else
-			  {
-			  	  Index_mode = INDEX_MODE_NO_OKE_PASS;
-			  }
-		  }
-		  else
-		  {
-			  Index_mode = INDEX_MODE_NO_OKE_PASS;
-		  }
-		  /*Reset*/
-		  for(uint8_t i = 0; i < sizeof(password); i++)
-		  {
-			  password[i] = 0;
-		  }
+		  handler_keyIN_CheckPIN_NUM(password);
 	  }
 
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))

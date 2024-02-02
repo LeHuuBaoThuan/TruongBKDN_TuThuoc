@@ -12,8 +12,8 @@
 #include <KeyPad.h>
 #include<lcd_user.h>
 
-#define SIZE_ROW_NUM 1+3-1
-#define SIZE_ROW_PASS 9+5-1
+#define SIZE_ROW_NUM 	ROW_BEGIN_KEPAD_NUM + 3 - 1
+#define SIZE_ROW_PASS 	ROW_BEGIN_KEPAD_PASS + 5 - 1
 
 typedef enum
 {

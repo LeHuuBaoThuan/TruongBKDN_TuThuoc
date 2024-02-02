@@ -10,6 +10,8 @@
 
 #include "i2c-lcd.h"
 
+#define ROW_BEGIN_KEPAD_NUM		1
+#define ROW_BEGIN_KEPAD_PASS 	9
 typedef enum
 {
 	STATUS_1 = 1,
