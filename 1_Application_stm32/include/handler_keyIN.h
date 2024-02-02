@@ -21,5 +21,6 @@ typedef enum
 	KEY_NOT = 0
 } STATE_KEY;
 STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button, char *key, char* password);
+void handler_keyIN_CheckPIN_NUM(char * password);
 
 #endif /* _HANDLER_KEYIN_H_ */

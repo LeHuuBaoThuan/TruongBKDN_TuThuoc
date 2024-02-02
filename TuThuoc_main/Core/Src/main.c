@@ -195,11 +195,10 @@ int main(void)
 	  }
 
 	  /*Enter key and display on LCD pass/num*/
-	  if(handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, password) == KEY_OK)
+	  if((handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, password) == KEY_OK))
 	  {
 		  handler_keyIN_CheckPIN_NUM(password);
 	  }
-
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
 	  {
 		  state_star_pass = NONE_STAR;

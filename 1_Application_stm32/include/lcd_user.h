@@ -10,7 +10,7 @@
 
 #include "i2c-lcd.h"
 
-#define ROW_BEGIN_KEPAD_NUM		1
+#define ROW_BEGIN_KEPAD_NUM		9
 #define ROW_BEGIN_KEPAD_PASS 	9
 typedef enum
 {
@@ -25,10 +25,11 @@ typedef enum
 
 typedef enum
 {
+	CONFIG_ROW0 = 0,
 	CONFIG_ROW1 = 1,
 	CONFIG_ROW2 = 2,
 	CONFIG_ROW3 = 3,
-	CONFIG_NONE = 0
+	CONFIG_ERROR = -1
 } STATUS_CONFIG_TYPEDEF;
 
 typedef enum
@@ -63,6 +64,7 @@ typedef struct
 {
 	uint8_t signal_enter_pass;
 	uint8_t signal_enter_num;
+	uint8_t signal_enter_OKE;
 } enter_num_pass_typedef;
 
 

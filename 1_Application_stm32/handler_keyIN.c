@@ -12,15 +12,37 @@ uint8_t row_key_password = ROW_BEGIN_KEPAD_PASS;
 
 static uint8_t num_ok = 0;
 /*test pass*/
-char num1[3] = "012";
-char pass1[5] = "12321";
+char num1[5] = "012";
+char num2[5] = "123";
+char num3[5] = "321";
+char num4[5] = "431";
+char num5[5] = "456";
+char num6[5] = "234";
+char num7[5] = "212";
+char* jagged_num[7] = { num1, num2, num3, num4, num5, num6, num7 };
 
-char num2[3] = "211";
-char pass2[5] = "12345";
-
-char num3[3] = "234";
-char pass3[5] = "13579";
-
+char pass1[5] = "54321";
+char pass2[5] = "54321";
+char pass3[5] = "54321";
+char pass4[5] = "54321";
+char pass5[5] = "76543";
+char pass6[5] = "54321";
+char pass7[5] = "54321";
+char* jagged_pass[7] = { pass1, pass2, pass3, pass4, pass5, pass6, pass7 };
+//==============================================================================================================================================================
+/* <function summary decription>
+  +) NOTE:
+    - Hàm để nhận pass/ num và xuất ra màng hình LCD
+    - lưu pass được nhập vào 5 phần tử của mảng password, 3 phần tử của num được lưu vào password.
+    - Trả về trạng thái đã nhập đủ ký tự hay chưa?
+  +) PARAM:
+    - CLCD_I2C_Name* LCD_user                      		: Thông số LCD
+    - STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button  : BUTTON/KEYPAD
+    - char* password									:
+  +) RETURN:
+    - KEY_NOT	                                : Ký tự chưa nhập đủ, nhập thêm
+    - KEY_OK                               		: Ký tự nhập vào đã đủ 3 cho num, 5 cho pin
+*/
 STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button, char* key, char* password)
 {
 	  if(*key != KEYPAD_NOT_PRESSED)	//when state_button = KEYPAD
@@ -36,8 +58,6 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
 
 			  if(row_key_password > SIZE_ROW_PASS)
 			  {
-//				  enter_num_pass.signal_enter_pass = NOT_DONE;
-
 				  state_button = BUTTON;
 				  /*Neu Mang hinh nhap du 5 so*/
 				  /*reset mang hinh*/
@@ -63,8 +83,6 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
 
 			  if(row_key_num > SIZE_ROW_NUM)
 			  {
-//				  enter_num_pass.signal_enter_num = NOT_DONE;
-
 				  state_button = BUTTON;
 				  /*Neu Mang hinh nhap du 5 so*/
 				  /*reset mang hinh*/
@@ -89,25 +107,42 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
 		  return KEY_NOT;
 	  }
 }
+//==============================================================================================================================================================
+/* <function summary decription>
+  +) NOTE:
+    - Kiểm tra num/pass và trả về khung hình OKE, Fail
+  +) PARAM:
+    -void* Param1                       : pointer to anything
+    -unsigned char Param2               : 0->7
+  +) RETURN:
+    -0                                  : done
+    -else                               : reason of failed
+*/
 void handler_keyIN_CheckPIN_NUM(char * password)
 {
+	static uint8_t counter = 0;
 	if(enter_num_pass.signal_enter_num == PROCESSING)
 	{
+		counter = 0;
+		num_ok = 0;
 		enter_num_pass.signal_enter_num = NOT_DONE;
-		if(strstr(password, num1) != NULL || strstr(password, num2) != NULL || strstr(password, num3) != NULL)
+		for(uint8_t j = 0; j < 7; j++)
 		{
-			num_ok = 1;
+			if(strstr(password, jagged_num[j]) != NULL)
+			{
+				num_ok = j;
+				counter++;
+			}
 		}
-		else
+		if(counter == 0)
 		{
 			num_ok = 0;
-			Index_mode = INDEX_MODE_NO_OKE_PASS;
 		}
 	}
-	else if(enter_num_pass.signal_enter_pass == PROCESSING && num_ok == 1)
+	else if(enter_num_pass.signal_enter_pass == PROCESSING && counter != 0)
 	{
 		enter_num_pass.signal_enter_pass = NOT_DONE;
-		if(strstr(password, pass1) != NULL || strstr(password, pass2) != NULL || strstr(password, pass3) != NULL)
+		if(strstr(password, jagged_pass[num_ok]) != NULL)
 		{
 			Index_mode = INDEX_MODE_OKE_PASS;
 		}
@@ -118,6 +153,8 @@ void handler_keyIN_CheckPIN_NUM(char * password)
 	}
 	else
 	{
+		enter_num_pass.signal_enter_num = NOT_DONE;
+		enter_num_pass.signal_enter_pass = NOT_DONE;
 		Index_mode = INDEX_MODE_NO_OKE_PASS;
 	}
 	/*Reset*/
@@ -126,3 +163,14 @@ void handler_keyIN_CheckPIN_NUM(char * password)
 		password[i] = 0;
 	}
 }
+//==============================================================================================================================================================
+/* <function summary decription>
+  +) NOTE:
+    - Hàm kiểm tra num/pass
+  +) PARAM:
+    -void* Param1                       : pointer to anything
+    -unsigned char Param2               : 0->7
+  +) RETURN:
+    -0                                  : done
+    -else                               : reason of failed
+*/

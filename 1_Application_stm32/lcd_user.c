@@ -14,7 +14,7 @@ volatile STATUS_CONFIG_TYPEDEF Config = CONFIG_ROW1;
 
 volatile uint8_t Enter = 0;
 volatile uint8_t flag_button = 0;
-volatile enter_num_pass_typedef enter_num_pass = {NOT_DONE, NOT_DONE};
+volatile enter_num_pass_typedef enter_num_pass = {NOT_DONE, NOT_DONE, NOT_DONE};
 volatile STATE_SCREEN_STAR_PASS_TYPEDEF state_star_pass = STAR;
 
 
@@ -42,14 +42,14 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				CLCD_I2C_SetCursor(LCD_user, 0, 0);
 				CLCD_I2C_WriteString(LCD_user,"TRUONG DHBK-DHDN");
 
-				CLCD_I2C_SetCursor(LCD_user, 3, 1);
-				CLCD_I2C_WriteString(LCD_user,"KHOA CO KHI");
+				CLCD_I2C_SetCursor(LCD_user, 4, 1);
+				CLCD_I2C_WriteString(LCD_user,"SV-NV-KH");
 
 				CLCD_I2C_SetCursor(LCD_user, 4, 2);
 				CLCD_I2C_WriteString(LCD_user,"TU THUOC");
 
-				CLCD_I2C_SetCursor(LCD_user, 0, 3);
-				CLCD_I2C_WriteString(LCD_user,"Please Set Mode!");
+				CLCD_I2C_SetCursor(LCD_user, 2, 3);
+				CLCD_I2C_WriteString(LCD_user,"Press \"Enter\"!");
 			}
 			else if(status_display == STATUS_2)
 			{
@@ -66,11 +66,13 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				CLCD_I2C_SetCursor(LCD_user, 0, 3);
 				CLCD_I2C_WriteString(LCD_user,"-Exit");
 			}
-			else if(status_display == STATUS_3)
+			else if(status_display == STATUS_3)							// PASSWORD
 			{
-				// dislay Select cycle ! Status_Display =2
 				CLCD_I2C_SetCursor(LCD_user, 0, 0);
-				CLCD_I2C_WriteString(LCD_user,"Enter ur number:");
+				CLCD_I2C_WriteString(LCD_user,"Information:");
+				// dislay Select cycle ! Status_Display =2
+				CLCD_I2C_SetCursor(LCD_user, 0, 1);
+				CLCD_I2C_WriteString(LCD_user,"-NUM:");
 				if(state_star_pass == STAR)
 				{
 					CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_NUM - 1, 1);
@@ -81,8 +83,9 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 					CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_NUM - 1, 1);
 					CLCD_I2C_WriteString(LCD_user,">");
 				}
+
 				CLCD_I2C_SetCursor(LCD_user, 0, 2);
-				CLCD_I2C_WriteString(LCD_user,"PIN: ");
+				CLCD_I2C_WriteString(LCD_user,"-PIN: ");
 				if(state_star_pass == STAR)
 				{
 					CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_PASS - 1, 2);
@@ -93,8 +96,9 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 					CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_PASS - 1, 2);
 					CLCD_I2C_WriteString(LCD_user,">");
 				}
+
 				CLCD_I2C_SetCursor(LCD_user, 0, 3);
-				CLCD_I2C_WriteString(LCD_user,"Exit");
+				CLCD_I2C_WriteString(LCD_user,"-Exit");
 			}
 			else if(status_display == STATUS_4)
 			{
@@ -144,14 +148,14 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 			CLCD_I2C_SetCursor(LCD_user, 0, 0);
 			CLCD_I2C_WriteString(LCD_user,"TRUONG DHBK-DHDN");
 
-			CLCD_I2C_SetCursor(LCD_user, 3, 1);
-			CLCD_I2C_WriteString(LCD_user,"KHOA CO KHI");
+			CLCD_I2C_SetCursor(LCD_user, 4, 1);
+			CLCD_I2C_WriteString(LCD_user,"SV-NV-KH");
 
 			CLCD_I2C_SetCursor(LCD_user, 4, 2);
 			CLCD_I2C_WriteString(LCD_user,"TU THUOC");
 
-			CLCD_I2C_SetCursor(LCD_user, 0, 3);
-			CLCD_I2C_WriteString(LCD_user,"Please Set Mode!");
+			CLCD_I2C_SetCursor(LCD_user, 2, 3);
+			CLCD_I2C_WriteString(LCD_user,"Nhan \"Enter\"!");
 		}
 		else if(status_display == STATUS_2)
 		{
@@ -168,11 +172,13 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 			CLCD_I2C_SetCursor(LCD_user, 0, 3);
 			CLCD_I2C_WriteString(LCD_user,"-Thoat");
 		}
-		else if(status_display == STATUS_3)
+		else if(status_display == STATUS_3)										//PASSWORD
 		{
-			// dislay Select cycle ! Status_Display =2
 			CLCD_I2C_SetCursor(LCD_user, 0, 0);
-			CLCD_I2C_WriteString(LCD_user,"Nhap stt cua ban");
+			CLCD_I2C_WriteString(LCD_user,"TT benh nhan:");
+			// dislay Select cycle ! Status_Display =2
+			CLCD_I2C_SetCursor(LCD_user, 0, 1);
+			CLCD_I2C_WriteString(LCD_user,"-STT:");
 			if(state_star_pass == STAR)
 			{
 				CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_NUM - 1, 1);
@@ -184,7 +190,7 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				CLCD_I2C_WriteString(LCD_user,">");
 			}
 			CLCD_I2C_SetCursor(LCD_user, 0, 2);
-			CLCD_I2C_WriteString(LCD_user,"PIN: ");
+			CLCD_I2C_WriteString(LCD_user,"-PIN: ");
 			if(state_star_pass == STAR)
 			{
 				CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_PASS - 1, 2);
@@ -195,8 +201,9 @@ void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF status_dis
 				CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_PASS - 1, 2);
 				CLCD_I2C_WriteString(LCD_user,">");
 			}
+
 			CLCD_I2C_SetCursor(LCD_user, 0, 3);
-			CLCD_I2C_WriteString(LCD_user,"Thoat");
+			CLCD_I2C_WriteString(LCD_user,"-Thoat");
 		}
 		else if(status_display == STATUS_4)
 		{
@@ -260,7 +267,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 	}
 	if(Mode == 0)
 	{
-		Config = CONFIG_NONE;
+		Config = CONFIG_ROW0;
 		Enter = 0;
 		Status_Display = STATUS_1;
 		lcd_user_display(LCD_user, Status_Display);
@@ -277,7 +284,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 				flag_button = 0;
 			}
 			Status_Display = STATUS_2;
-			if(Config != CONFIG_NONE)
+			if(Config != CONFIG_ROW0)
 			{
 				CLCD_I2C_SetCursor(LCD_user, 15, Config);
 				CLCD_I2C_WriteString(LCD_user, "<");
@@ -300,7 +307,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
                     {
                         Index_mode = INDEX_MODE1;
                         Mode = 0;
-                        Config = CONFIG_NONE;
+                        Config = CONFIG_ROW0;
                         Status_Display = STATUS_1;
                         delete = 1;
                     }
@@ -322,7 +329,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 				CLCD_I2C_Clear(LCD_user);
 				flag_button = 0;
 			}
-			if(Config != CONFIG_NONE)
+			if(Config != CONFIG_ROW0)
 			{
 				CLCD_I2C_SetCursor(LCD_user, 15, Config);
 				CLCD_I2C_WriteString(LCD_user, "<");
@@ -343,7 +350,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
                     {
                         Index_mode = INDEX_MODE_NONE;
 //                        Mode = 0;
-                        Config = CONFIG_NONE;
+                        Config = CONFIG_ROW0;
                         Status_Display = STATUS_2;
                         delete = 1;
                     }
@@ -365,7 +372,7 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 				CLCD_I2C_Clear(LCD_user);
 				flag_button = 0;
 			}
-			if(Config != CONFIG_NONE)
+			if(Config != CONFIG_ROW0)
 			{
 				CLCD_I2C_SetCursor(LCD_user, 15, Config);
 				CLCD_I2C_WriteString(LCD_user, "<");
@@ -373,21 +380,21 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 				{
 					Enter = 0;
 					if(Config == CONFIG_ROW1)	// Nhap so thu tu
-                    {
+					{
 						enter_num_pass.signal_enter_num = PROCESSING;
-                    }
+					}
 					if(Config == CONFIG_ROW2)	// Nhap pass
-                    {
+					{
 						enter_num_pass.signal_enter_pass = PROCESSING;
-                    }
+					}
 					if(Config == CONFIG_ROW3)
-                    {
-                        Index_mode = INDEX_MODE_NONE;
-//                        Mode = 0;
-                        Config = CONFIG_NONE;
-                        Status_Display = STATUS_2;
-                        delete = 1;
-                    }
+					{
+						Index_mode = INDEX_MODE_NONE;
+	//                        Mode = 0;
+						Config = CONFIG_ROW0;
+						Status_Display = STATUS_2;
+						delete = 1;
+					}
 				} /*END if(Enter)*/
 			}
 			else
@@ -403,9 +410,9 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 			lcd_user_display(LCD_user, Status_Display);
 			if(Enter)
             {
+				Enter = 0;
                 Index_mode = INDEX_MODE_NONE;
-//                        Mode = 0;
-                Config = CONFIG_NONE;
+                Config = CONFIG_ROW0;
                 Status_Display = STATUS_2;
                 delete = 1;
             }
@@ -416,10 +423,10 @@ void lcd_system_handler(CLCD_I2C_Name* LCD_user)
 			lcd_user_display(LCD_user, Status_Display);
 			if(Enter)
             {
-                Index_mode = INDEX_MODE_NONE;
-//                        Mode = 0;
-                Config = CONFIG_NONE;
-                Status_Display = STATUS_2;
+				Enter = 0;
+                Index_mode = INDEX_MODE2;
+                Config = CONFIG_ROW0;
+                Status_Display = STATUS_3;
                 delete = 1;
             }
 		}
