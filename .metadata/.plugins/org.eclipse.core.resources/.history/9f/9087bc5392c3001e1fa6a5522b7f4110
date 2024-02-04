@@ -1,0 +1,26 @@
+/*
+ * handler.h
+ *
+ *  Created on: 31 Jan 2024
+ *      Author: BaoThuan
+ */
+
+#ifndef _HANDLER_KEYIN_H_
+#define _HANDLER_KEYIN_H_
+
+#include "stm32f1xx_hal.h"
+#include <KeyPad.h>
+#include<lcd_user.h>
+
+typedef enum
+{
+	KEY_OK = 1,
+	KEY_NOT = 0
+} STATE_KEY;
+
+#define SIZE_ROW_NUM 	ROW_BEGIN_KEPAD_NUM + 3 - 1				// Cột đầu tiên nhập num
+#define SIZE_ROW_PASS 	ROW_BEGIN_KEPAD_PASS + 5 - 1			// Cột đâu tiên nhập pass
+
+STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button, char *key, char* password);
+void handler_keyIN_CheckPIN_NUM(char * password);
+#endif /* _HANDLER_KEYIN_H_ */

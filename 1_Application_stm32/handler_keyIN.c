@@ -7,7 +7,7 @@
 
 #include <handler_keyIN.h>
 
-static uint8_t row_key_num 		= ROW_BEGIN_KEPAD_NUM;
+static uint8_t row_key_num 			= ROW_BEGIN_KEPAD_NUM;
 static uint8_t row_key_password 	= ROW_BEGIN_KEPAD_PASS;
 
 static uint8_t num_ok = 0;
@@ -29,20 +29,10 @@ char pass5[5] = "76543";
 char pass6[5] = "54321";
 char pass7[5] = "54321";
 char* jagged_pass[7] = { pass1, pass2, pass3, pass4, pass5, pass6, pass7 };
-//==============================================================================================================================================================
-/* <function summary decription>
-  +) NOTE:
-    - Hàm để nhận pass/ num và xuất ra màng hình LCD
-    - lưu pass được nhập vào 5 phần tử của mảng password, 3 phần tử của num được lưu vào password.
-    - Trả về trạng thái đã nhập đủ ký tự hay chưa?
-  +) PARAM:
-    - CLCD_I2C_Name* LCD_user                      		: Thông số LCD
-    - STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button  : BUTTON/KEYPAD
-    - char* password									:
-  +) RETURN:
-    - KEY_NOT	                                : Ký tự chưa nhập đủ, nhập thêm
-    - KEY_OK                               		: Ký tự nhập vào đã đủ 3 cho num, 5 cho pin
-*/
+
+
+
+
 STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button, char* key, char* password)
 {
 	  if(*key != KEYPAD_NOT_PRESSED)	//when state_button = KEYPAD
@@ -107,16 +97,9 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
 		  return KEY_NOT;
 	  }
 }
-//==============================================================================================================================================================
-/* <function summary decription>
-  +) NOTE:
-    - Kiểm tra num/pass và trả về khung hình OKE, Fail
-  +) PARAM:
-    -char * password                       : key được nhập từ bàn phiếm khi được báo nhập đủ
-  +) RETURN:
-    -0                                  : done
-    -else                               : reason of failed
-*/
+
+
+
 void handler_keyIN_CheckPIN_NUM(char * password)
 {
 	static uint8_t counter = 0;

@@ -11,47 +11,14 @@ const char Keypad_Button_Values[4][4] =  {    {'1', '2', '3', 'A'},
 											  {'7', '8', '9', 'C'},
 											  {'*', '0', '#', 'D'},
                                          };
-/* <function summary decription>
-  +) NOTE:
-    -Khai báo port, pin
-  +) PARAM:
-    -***
-  +) RETURN:
-    -void
-*/
-void KeyPad_Init(	GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD,
-					GPIO_TypeDef* C_port0, GPIO_TypeDef* C_port1, GPIO_TypeDef* C_port2, GPIO_TypeDef* C_port3,\
-					uint16_t C_pin0, uint16_t C_pin1, uint16_t C_pin2, uint16_t C_pin3,\
-					GPIO_TypeDef* R_port0, GPIO_TypeDef* R_port1, GPIO_TypeDef* R_port2, GPIO_TypeDef* R_port3,\
-					uint16_t R_pin0, uint16_t R_pin1, uint16_t R_pin2, uint16_t R_pin3)
-{
-	//OUTPUT
-  COL_KEY_PAD->PORT.GPIO0 = C_port0;
-  COL_KEY_PAD->PORT.GPIO1 = C_port1;
-  COL_KEY_PAD->PORT.GPIO2 = C_port2;
-  COL_KEY_PAD->PORT.GPIO3 = C_port3;
 
-  COL_KEY_PAD->PIN.GPIO_PIN_A = C_pin0;
-  COL_KEY_PAD->PIN.GPIO_PIN_B = C_pin1;
-  COL_KEY_PAD->PIN.GPIO_PIN_C = C_pin2;
-  COL_KEY_PAD->PIN.GPIO_PIN_D = C_pin3;
-  //INPUT
-  ROW_KEY_PAD->PORT.GPIO0 = R_port0;
-  ROW_KEY_PAD->PORT.GPIO1 = R_port1;
-  ROW_KEY_PAD->PORT.GPIO2 = R_port2;
-  ROW_KEY_PAD->PORT.GPIO3 = R_port3;
 
-  ROW_KEY_PAD->PIN.GPIO_PIN_A = R_pin0;
-  ROW_KEY_PAD->PIN.GPIO_PIN_B = R_pin1;
-  ROW_KEY_PAD->PIN.GPIO_PIN_C = R_pin2;
-  ROW_KEY_PAD->PIN.GPIO_PIN_D = R_pin3;
-}
-//==============================================================================================================================================================
+//************************** Low Level Function ****************************************************************//
+
 /* <function summary decription>
   +) NOTE:
     -For specific row value sent , check all the cloumns
   +) PARAM:
-    -GPIO_COLUMN_TYPEDEF* COL_KEY_PAD	: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
     -GPIO_ROW_TYPEDEF* ROW_KEY_PAD		: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
     -uint8_t Row						: 0->4
   +) RETURN:
@@ -81,16 +48,14 @@ static char Check_Keypad_Column(GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main, uint8_t Row)
 	}
 	return KEYPAD_NOT_PRESSED;                   //If NO Key is pressed
 }
-//==============================================================================================================================================================
+
+
+
 /* <function summary decription>
-  +) NOTE:
-    -Read the keypad
+  +) NOTE: Quét cột keypad và kiểm tra bằng hàm "Check_Keypad_Column"
   +) PARAM:
-    -void* Param1                       			: pointer to anything
-    -unsigned char Param2               			: 0->7
-	-CLCD_I2C_Name* LCD								: LCD_value
     -GPIO_COLUMN_TYPEDEF* COL_KEY_PAD				: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
-    -GPIO_ROW_TYPEDEF* ROW_KEY_PAD, uint8_t* row	: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
+    -GPIO_ROW_TYPEDEF* ROW_KEY_PAD					: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
   +) RETURN:
     -char check                                  	: const char Keypad_Button_Values[x][y]
     -KEYPAD_NOT_PRESSED                     		: '\0' {reason of failed)
@@ -141,20 +106,41 @@ static char KEYPAD_Read(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_
     /*Key not pressed */
     return KEYPAD_NOT_PRESSED;
 }
-//==============================================================================================================================================================
-/* <function summary decription>
-  +) NOTE:
-    -Read the keypad
-  +) PARAM:
-    -void* Param1                       			: pointer to anything
-    -unsigned char Param2               			: 0->7
-	-CLCD_I2C_Name* LCD								: LCD_value
-    -GPIO_COLUMN_TYPEDEF* COL_KEY_PAD				: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
-    -GPIO_ROW_TYPEDEF* ROW_KEY_PAD, uint8_t* row	: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
-  +) RETURN:
-    -char check                                  	: const char Keypad_Button_Values[x][y]
-    -KEYPAD_NOT_PRESSED                     		: '\0' {reason of failed)
-*/
+
+
+
+//************************** High Level Function ****************************************************************//
+
+void KeyPad_Init(	GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD,
+					GPIO_TypeDef* C_port0, GPIO_TypeDef* C_port1, GPIO_TypeDef* C_port2, GPIO_TypeDef* C_port3,\
+					uint16_t C_pin0, uint16_t C_pin1, uint16_t C_pin2, uint16_t C_pin3,\
+					GPIO_TypeDef* R_port0, GPIO_TypeDef* R_port1, GPIO_TypeDef* R_port2, GPIO_TypeDef* R_port3,\
+					uint16_t R_pin0, uint16_t R_pin1, uint16_t R_pin2, uint16_t R_pin3)
+{
+	//OUTPUT
+  COL_KEY_PAD->PORT.GPIO0 = C_port0;
+  COL_KEY_PAD->PORT.GPIO1 = C_port1;
+  COL_KEY_PAD->PORT.GPIO2 = C_port2;
+  COL_KEY_PAD->PORT.GPIO3 = C_port3;
+
+  COL_KEY_PAD->PIN.GPIO_PIN_A = C_pin0;
+  COL_KEY_PAD->PIN.GPIO_PIN_B = C_pin1;
+  COL_KEY_PAD->PIN.GPIO_PIN_C = C_pin2;
+  COL_KEY_PAD->PIN.GPIO_PIN_D = C_pin3;
+  //INPUT
+  ROW_KEY_PAD->PORT.GPIO0 = R_port0;
+  ROW_KEY_PAD->PORT.GPIO1 = R_port1;
+  ROW_KEY_PAD->PORT.GPIO2 = R_port2;
+  ROW_KEY_PAD->PORT.GPIO3 = R_port3;
+
+  ROW_KEY_PAD->PIN.GPIO_PIN_A = R_pin0;
+  ROW_KEY_PAD->PIN.GPIO_PIN_B = R_pin1;
+  ROW_KEY_PAD->PIN.GPIO_PIN_C = R_pin2;
+  ROW_KEY_PAD->PIN.GPIO_PIN_D = R_pin3;
+}
+
+
+
 char KEYPAD_Handler(GPIO_COLUMN_TYPEDEF* COL_KEY_PAD, GPIO_ROW_TYPEDEF* ROW_KEY_PAD_main)
 {
 	char key = KEYPAD_Read(COL_KEY_PAD, ROW_KEY_PAD_main);;

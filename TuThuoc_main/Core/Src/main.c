@@ -63,8 +63,8 @@ static void MX_I2C2_Init(void);
 /* USER CODE BEGIN 0 */
 STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button = BUTTON;
 
-GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
-GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
+GPIO_COLUMN_TYPEDEF* COL_KEY_PAD_main;
+GPIO_ROW_TYPEDEF* 	ROW_KEY_PAD_main;
 
 char key = 0;
 char password[5] = {0};
@@ -81,7 +81,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin)) && (state_button == KEYPAD))
 	{
 		flag_keypad = 1;
-		key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main);
+		key = KEYPAD_Handler(COL_KEY_PAD_main, ROW_KEY_PAD_main);
 	}
 	/*flag lcd*/
 	if(state_button == BUTTON)
@@ -165,9 +165,9 @@ int main(void)
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
   KeyPad_Init(		// Cpl pin + port
-				    &COL_KEY_PAD_main, &ROW_KEY_PAD_main,												\
-					C1_OUT_GPIO_Port, C2_OUT_GPIO_Port, C3_OUT_GPIO_Port, C4_OUT_GPIO_Port,		\
-					C1_OUT_Pin, C2_OUT_Pin, C3_OUT_Pin, C4_OUT_Pin,								\
+				    COL_KEY_PAD_main, ROW_KEY_PAD_main,												\
+					C1_OUT_GPIO_Port, C2_OUT_GPIO_Port, C3_OUT_GPIO_Port, C4_OUT_GPIO_Port,				\
+					C1_OUT_Pin, C2_OUT_Pin, C3_OUT_Pin, C4_OUT_Pin,										\
 					// Row pin + port
 					R1_IN_GPIO_Port, R2_IN_GPIO_Port, R3_IN_GPIO_Port, R4_IN_GPIO_Port,					\
 					R1_IN_Pin, R2_IN_Pin, R3_IN_Pin, R4_IN_Pin
