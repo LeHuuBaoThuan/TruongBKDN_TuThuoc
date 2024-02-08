@@ -1,7 +1,21 @@
-03:17:45 **** Incremental Build of configuration Debug for project TuThuoc_main ****
+00:59:24 **** Incremental Build of configuration Debug for project TuThuoc_main ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/1_Application_stm32/include" -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/0_include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "TuThuoc_main.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Users\BaoThuan\OneDrive - The University of Technology\Desktop\PROJECT\GIT_HUB\BKDN_TuThuoc\TuThuoc_main\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TuThuoc_main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: TuThuoc_main.elf
+ 
+arm-none-eabi-size   TuThuoc_main.elf 
+arm-none-eabi-objdump -h -S  TuThuoc_main.elf  > "TuThuoc_main.list"
+   text	   data	    bss	    dec	    hex	filename
+  13660	    200	   1840	  15700	   3d54	TuThuoc_main.elf
+Finished building: default.size.stdout
+ 
+Finished building: TuThuoc_main.list
+ 
+00:59:28 **** Incremental Build of configuration Debug for project TuThuoc_main ****
 make -j8 all 
 arm-none-eabi-size   TuThuoc_main.elf 
    text	   data	    bss	    dec	    hex	filename
-  13672	    200	   1800	  15672	   3d38	TuThuoc_main.elf
+  13660	    200	   1840	  15700	   3d54	TuThuoc_main.elf
 Finished building: default.size.stdout
  
