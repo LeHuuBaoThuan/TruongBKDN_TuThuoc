@@ -12,22 +12,38 @@ static uint8_t row_key_password 	= ROW_BEGIN_KEPAD_PASS;
 
 static uint8_t num_ok = 0;
 /*test pass*/
-char num1[5] = "012";
-char num2[5] = "123";
-char num3[5] = "321";
-char num4[5] = "431";
-char num5[5] = "456";
-char num6[5] = "234";
-char num7[5] = "212";
-char* jagged_num[7] = { num1, num2, num3, num4, num5, num6, num7 };
+//char num1[5] = "111";
+//char num2[5] = "111";
+//char num3[5] = "111";
+//char num4[5] = "111";
+//char num5[5] = "111";
+//char num6[5] = "111";
+//char num7[5] = "111";
+
+//char* jagged_num[7] = { num1, num2, num3, num4, num5, num6, num7 };
+
+char stt1 = '1';
+char stt2 = '1';
+char stt3 = '1';
+char stt4 = '1';
+char stt5 = '1';
+char stt6 = '1';
+char stt7 = '1';
+
+
+char* jagged_num[7] = { &stt1, &stt2, &stt3, &stt4, &stt5, &stt6, &stt7 };
+
+
 
 char pass1[5] = "54321";
 char pass2[5] = "54321";
 char pass3[5] = "54321";
 char pass4[5] = "54321";
-char pass5[5] = "76543";
+char pass5[5] = "54321";
 char pass6[5] = "54321";
 char pass7[5] = "54321";
+
+
 char* jagged_pass[7] = { pass1, pass2, pass3, pass4, pass5, pass6, pass7 };
 
 
@@ -100,7 +116,7 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
 
 
 
-void handler_keyIN_CheckPIN_NUM(char * password)
+void handler_keyIN_CheckPIN_NUM(char * num_pin_buffer)
 {
 	static uint8_t counter = 0;
 	if(enter_num_pass.signal_enter_num == PROCESSING)
@@ -110,7 +126,7 @@ void handler_keyIN_CheckPIN_NUM(char * password)
 		enter_num_pass.signal_enter_num = NOT_DONE;
 		for(uint8_t j = 0; j < 7; j++)
 		{
-			if(strstr(password, jagged_num[j]) != NULL)
+			if(strstr(num_pin_buffer, jagged_num[j]) != NULL)
 			{
 				num_ok = j;
 				counter++;
@@ -124,7 +140,7 @@ void handler_keyIN_CheckPIN_NUM(char * password)
 	else if(enter_num_pass.signal_enter_pass == PROCESSING && counter != 0)
 	{
 		enter_num_pass.signal_enter_pass = NOT_DONE;
-		if(strstr(password, jagged_pass[num_ok]) != NULL)
+		if(strstr(num_pin_buffer, jagged_pass[num_ok]) != NULL)
 		{
 			Index_mode = INDEX_MODE_OKE_PASS;
 		}
@@ -140,19 +156,8 @@ void handler_keyIN_CheckPIN_NUM(char * password)
 		Index_mode = INDEX_MODE_NO_OKE_PASS;
 	}
 	/*Reset*/
-	for(uint8_t i = 0; i < sizeof(password); i++)
+	for(uint8_t i = 0; i < sizeof(num_pin_buffer); i++)
 	{
-		password[i] = 0;
+		num_pin_buffer[i] = 0;
 	}
 }
-//==============================================================================================================================================================
-/* <function summary decription>
-  +) NOTE:
-    - Hàm kiểm tra num/pass
-  +) PARAM:
-    -void* Param1                       : pointer to anything
-    -unsigned char Param2               : 0->7
-  +) RETURN:
-    -0                                  : done
-    -else                               : reason of failed
-*/

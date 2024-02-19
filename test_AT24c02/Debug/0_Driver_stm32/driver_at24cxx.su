@@ -1,0 +1,9 @@
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:62:9:at24cxx_init	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:136:9:at24cxx_deinit	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:167:9:at24cxx_set_type	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:188:9:at24cxx_get_type	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:209:9:at24cxx_set_addr_pin	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:231:9:at24cxx_get_addr_pin	16	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:257:9:at24cxx_read	40	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:360:9:at24cxx_write	40	static
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/driver_at24cxx.c:459:9:at24cxx_info	16	static

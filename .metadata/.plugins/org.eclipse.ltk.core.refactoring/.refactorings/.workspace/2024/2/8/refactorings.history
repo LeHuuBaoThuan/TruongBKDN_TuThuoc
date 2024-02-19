@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;TuThuoc_main/1_Application_stm32/include/UART_PIN&apos;" deleteContents="false" description="Delete resource &apos;TuThuoc_main/1_Application_stm32/include/UART_PIN&apos;" element1="/TuThuoc_main/1_Application_stm32/include/UART_PIN" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1708280014649"/>
+</session>

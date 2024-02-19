@@ -1,0 +1,495 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include<KeyPad.h>
+#include<lcd_user.h>
+#include<relay.h>
+#include<handler_keyIN.h>
+#include<uart_user.h>
+#include "EEPROM.h"
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+#define MEM_ADDR    0x00u
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
+UART_HandleTypeDef huart3;
+
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_USART3_UART_Init(void);
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+STATE_SELECT_BUTTON_HANDLER_TYPEDEF state_button = BUTTON;
+
+GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
+GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
+
+char key = 0;
+char pin_IN[5] = {0};
+char pin_IN_UART[5] = {0};
+
+
+volatile uint8_t flag_keypad = 0;
+
+bool writeStatus = false;
+bool readStatus = false;
+bool eraseStatus = false;
+uint8_t  wData[] = "Hello World 123";
+uint8_t  rData[25];
+
+
+volatile char rxByte = 0;
+uint8_t rxBuffer[10]={0};
+volatile uint8_t rxBufferIndex = 0;
+volatile uint8_t flag_rx_done = 0;
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	static uint32_t TimeBegin = 0;
+	static uint32_t TimeNow = 0;
+
+/*CODE ISR*/
+	/*flag keypad*/
+	if(((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin)) && (state_button == KEYPAD))
+	{
+		flag_keypad = 1;
+		key = KEYPAD_Handler(&COL_KEY_PAD_main, &ROW_KEY_PAD_main);
+	}
+	/*flag lcd*/
+	if(state_button == BUTTON)
+	{
+		flag_button = 1;
+		if(UP_EXTI_3_Pin == GPIO_Pin)
+		{
+			Config++;
+			if(Config > CONFIG_ROW3) Config = CONFIG_ROW1;
+		}
+		else if(DOWN_EXTI_4_Pin == GPIO_Pin)
+		{
+			Config--;
+			if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
+		}
+		else if(ENTER_EXTI_5_Pin == GPIO_Pin)
+		{
+			if(1 == Mode)
+			{
+				Enter = 1;
+			}
+			else
+			{
+				Mode = 1;
+			}
+		}
+	}
+	/*END CODE ISR*/
+
+	HAL_Delay(20);
+	TimeBegin = HAL_GetTick();
+	while(		HAL_GPIO_ReadPin(GPIOB, UP_EXTI_3_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(GPIOB, DOWN_EXTI_4_Pin) == GPIO_PIN_RESET 		\
+			|| 	HAL_GPIO_ReadPin(GPIOB, ENTER_EXTI_5_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(R1_IN_GPIO_Port, R1_IN_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(R2_IN_GPIO_Port, R2_IN_Pin) == GPIO_PIN_RESET 		\
+			|| 	HAL_GPIO_ReadPin(R3_IN_GPIO_Port, R3_IN_Pin) == GPIO_PIN_RESET		\
+			|| 	HAL_GPIO_ReadPin(R4_IN_GPIO_Port, R4_IN_Pin) == GPIO_PIN_RESET)
+	{
+		TimeNow = HAL_GetTick();
+		if(TimeNow - TimeBegin == 5000)
+		{
+//			ButtonError = 1;
+			break;
+		}
+	}
+	HAL_Delay(20);
+	EXTI->PR = ENTER_EXTI_5_Pin | DOWN_EXTI_4_Pin | UP_EXTI_3_Pin \
+			| R1_IN_Pin | R2_IN_Pin |R3_IN_Pin | R4_IN_Pin;
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(rxByte == '\r')
+	{
+		flag_rx_done = 1;
+	}
+	else
+	{
+		rxBuffer[rxBufferIndex] = rxByte;
+		rxBufferIndex++;
+	}
+	if(rxBufferIndex >= 20)
+	{
+		rxBufferIndex = 0;
+	}
+	HAL_UART_Receive_IT(&huart3, (uint8_t*)&rxByte, 1);
+}
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+  /* USER CODE BEGIN 1 */
+	CLCD_I2C_Name LCD1;
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_I2C1_Init();
+  MX_USART3_UART_Init();
+  /* USER CODE BEGIN 2 */
+
+  // INIT HAL lib
+  HAL_UART_Receive_IT(&huart3, (uint8_t*)&rxByte, 1);
+
+  // INIT user
+  KeyPad_Init(		// Cpl pin + port
+				    &COL_KEY_PAD_main, &ROW_KEY_PAD_main,												\
+					C1_OUT_GPIO_Port, C2_OUT_GPIO_Port, C3_OUT_GPIO_Port, C4_OUT_GPIO_Port,				\
+					C1_OUT_Pin, C2_OUT_Pin, C3_OUT_Pin, C4_OUT_Pin,										\
+					// Row pin + port
+					R1_IN_GPIO_Port, R2_IN_GPIO_Port, R3_IN_GPIO_Port, R4_IN_GPIO_Port,					\
+					R1_IN_Pin, R2_IN_Pin, R3_IN_Pin, R4_IN_Pin
+			  );
+  CLCD_I2C_Init(&LCD1, &hi2c1, (0x27 << 1), 16, 4);
+
+  at24_I2C_Init(hi2c1);
+
+  UART_Init_UART(&huart3);
+
+	if(at24_isConnected())
+	{
+//		eraseStatus = at24_eraseChip();
+//		HAL_Delay(10);
+//
+//		writeStatus = at24_write(MEM_ADDR,wData, 15, 100);
+//		HAL_Delay(10);
+
+		readStatus = at24_read(MEM_ADDR,rData, 15, 100);
+		HAL_Delay(10);
+	}
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+	  /*Debug key*/
+	  if(flag_keypad == 1)
+	  {
+		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+		  flag_keypad = 0;
+	  }
+
+
+	  /*UART handler after uart rx is exexecuted*/
+	  if(flag_rx_done == 1)
+	  {
+		  flag_rx_done = 0;
+		  /*function handler uart*/
+		  if(UART_handler(rxBuffer, pin_IN_UART) == UART_HANDLER_OKE);
+		  /*End function handler uart*/
+
+
+		  for(uint8_t i =0; i < sizeof(rxBuffer); i++)
+		  {
+			  rxBuffer[i] = 0;
+		  	  rxBufferIndex = 0;
+		  }
+	  }
+
+
+	  /*Enter key and display on LCD pass/num*/
+	  if(handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, pin_IN) == KEY_OK)
+	  {
+		  handler_keyIN_CheckPIN_NUM(pin_IN);
+	  }
+
+
+	  /*Chuyển đổi chế độ ch�?n kiểu nút nhấn thao tác màng hình*/
+	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
+	  {
+		  state_star_pass = NONE_STAR;
+		  state_button = KEYPAD;
+	  }
+	  else
+	  {
+		  state_button = BUTTON;
+	  }
+
+	  lcd_system_handler(&LCD1);
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, R7_Pin|R6_Pin|R5_Pin|R4_Pin
+                          |R3_Pin|R2_Pin|R1_Pin|C4_OUT_Pin
+                          |C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : R7_Pin R6_Pin R5_Pin R4_Pin
+                           R3_Pin R2_Pin R1_Pin C4_OUT_Pin
+                           C3_OUT_Pin C2_OUT_Pin C1_OUT_Pin */
+  GPIO_InitStruct.Pin = R7_Pin|R6_Pin|R5_Pin|R4_Pin
+                          |R3_Pin|R2_Pin|R1_Pin|C4_OUT_Pin
+                          |C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : R4_IN_Pin R3_IN_Pin R2_IN_Pin R1_IN_Pin
+                           UP_EXTI_3_Pin DOWN_EXTI_4_Pin ENTER_EXTI_5_Pin */
+  GPIO_InitStruct.Pin = R4_IN_Pin|R3_IN_Pin|R2_IN_Pin|R1_IN_Pin
+                          |UP_EXTI_3_Pin|DOWN_EXTI_4_Pin|ENTER_EXTI_5_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
+}
+
+/* USER CODE BEGIN 4 */
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */

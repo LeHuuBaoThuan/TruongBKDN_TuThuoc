@@ -1,0 +1,32 @@
+/*
+ * uart_user.h
+ *
+ *  Created on: Feb 8, 2024
+ *      Author: BaoThuan
+ */
+
+#ifndef INCLUDE_UART_USER_H_
+#define INCLUDE_UART_USER_H_
+
+#include "stm32f1xx_hal.h"
+
+typedef enum
+{
+
+} STATE_TX_PIN;
+
+
+
+//==============================================================================================================================================================
+/* <function summary decription>
+  +) NOTE:
+    -Read the keypad
+  +) PARAM:
+    -GPIO_COLUMN_TYPEDEF* COL_KEY_PAD				: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
+    -GPIO_ROW_TYPEDEF* ROW_KEY_PAD, uint8_t* row	: GPIO0 -> GPIO3, GPIO_PIN_A -> GPIO_PIN_D
+  +) RETURN:
+    -Keypad_Button_Values[Row-x][x+1]   			: Keypad_Button_Values
+    -KEYPAD_NOT_PRESSED                 			: "\0" (Không ấn nút)
+*/
+STATE_TX_PIN bluetooth_check_string_stop_start_robot(uint8_t * rxBuffer)
+#endif /* INCLUDE_UART_USER_H_ */

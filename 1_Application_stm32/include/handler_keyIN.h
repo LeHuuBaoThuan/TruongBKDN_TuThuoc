@@ -18,9 +18,11 @@ typedef enum
 	KEY_NOT = 0
 } STATE_KEY;
 
-#define SIZE_ROW_NUM 	ROW_BEGIN_KEPAD_NUM + 3 - 1				// Cột đầu tiên nhập num
-#define SIZE_ROW_PASS 	ROW_BEGIN_KEPAD_PASS + 5 - 1			// Cột đâu tiên nhập pass
+#define SIZE_ROW_NUM 	ROW_BEGIN_KEPAD_NUM + 1 - 1				// Cột đầu tiên nhập num: ROW_BEGIN_KEPAD_NUM + so luong NUM duoc dien vao
+#define SIZE_ROW_PASS 	ROW_BEGIN_KEPAD_PASS + 5 - 1			// Cột đâu tiên nhập pass: ROW_BEGIN_KEPAD_PASS + so luong PASS duoc dien vao
 
+extern char* jagged_num[7];
+extern char* jagged_pass[7];
 
 //==============================================================================================================================================================
 /* <function summary decription>

@@ -1,0 +1,36 @@
+/*
+ * uart_user.h
+ *
+ *  Created on: Feb 8, 2024
+ *      Author: BaoThuan
+ */
+
+#ifndef INCLUDE_UART_USER_H_
+#define INCLUDE_UART_USER_H_
+
+#include "stm32f1xx_hal.h"
+
+typedef enum
+{
+	UART_HANDLER_OKE,
+
+} STATE_TX_PIN;
+
+
+
+//==============================================================================================================================================================
+/* <function summary decription>
+  +) NOTE:
+    -RX value frome everythings
+    -Change the input password value param with a pointer with letter number param
+  +) PARAM:
+    -uint8_t * rxBuffer								: value frome EXTI uart
+  +) RETURN:
+    -STATE_TX_PIN									: UART_HANDLER_OKE
+    												  UART_HANDLER_ERROR
+*/
+STATE_TX_PIN bluetooth_check_string_stop_start_robot(uint8_t * rxBuffer, uint8_t PIN, uint8_t letter_num);
+
+
+
+#endif /* INCLUDE_UART_USER_H_ */

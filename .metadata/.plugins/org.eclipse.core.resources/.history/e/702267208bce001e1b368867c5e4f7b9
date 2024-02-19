@@ -1,0 +1,34 @@
+/*
+ * uart_user.h
+ *
+ *  Created on: Feb 8, 2024
+ *      Author: BaoThuan
+ */
+
+#ifndef INCLUDE_UART_USER_H_
+#define INCLUDE_UART_USER_H_
+
+#include "stm32f1xx_hal.h"
+
+typedef enum
+{
+
+} STATE_TX_PIN;
+
+
+
+//==============================================================================================================================================================
+/* <function summary decription>
+  +) NOTE:
+    -RX value frome everythings
+  +) PARAM:
+    -uint8_t * rxBuffer								: value frome EXTI uart
+  +) RETURN:
+    -Keypad_Button_Values[Row-x][x+1]   			: Keypad_Button_Values
+    -KEYPAD_NOT_PRESSED                 			: "\0" (Không ấn nút)
+*/
+STATE_TX_PIN bluetooth_check_string_stop_start_robot(uint8_t * rxBuffer);
+
+
+
+#endif /* INCLUDE_UART_USER_H_ */

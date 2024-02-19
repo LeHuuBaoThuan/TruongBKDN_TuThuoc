@@ -101,7 +101,7 @@ static void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF sta
 			if(state_star_pass == STAR)
 			{
 				CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_NUM - 1, 1);
-				CLCD_I2C_WriteString(LCD_user,">***");
+				CLCD_I2C_WriteString(LCD_user,">*");
 			}
 			else
 			{
@@ -211,7 +211,7 @@ static void lcd_user_display(CLCD_I2C_Name* LCD_user, STATUS_DISPLAY_TYPEDEF sta
 			if(state_star_pass == STAR)
 			{
 				CLCD_I2C_SetCursor(LCD_user, ROW_BEGIN_KEPAD_NUM - 1, 1);
-				CLCD_I2C_WriteString(LCD_user,">***");
+				CLCD_I2C_WriteString(LCD_user,">*");
 			}
 			else
 			{

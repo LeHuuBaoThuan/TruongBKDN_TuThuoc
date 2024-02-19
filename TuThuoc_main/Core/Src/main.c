@@ -24,7 +24,9 @@
 #include<KeyPad.h>
 #include<lcd_user.h>
 #include<relay.h>
-#include <handler_keyIN.h>
+#include<handler_keyIN.h>
+#include<uart_user.h>
+#include "EEPROM.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,7 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define MEM_ADDR    0x00u
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +46,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
-I2C_HandleTypeDef hi2c2;
+
+UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
@@ -54,7 +57,7 @@ I2C_HandleTypeDef hi2c2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_I2C2_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -67,16 +70,31 @@ GPIO_COLUMN_TYPEDEF COL_KEY_PAD_main;
 GPIO_ROW_TYPEDEF 	ROW_KEY_PAD_main;
 
 char key = 0;
-char password[5] = {0};
+char pin_IN[5] = {0};
+char pin_IN_UART[5] = {0};
+char num_IN_UART = 0;
 
 
 volatile uint8_t flag_keypad = 0;
+
+bool writeStatus = false;
+bool readStatus = false;
+bool eraseStatus = false;
+uint8_t  wData[] = "Hello World 123";
+uint8_t  rData[25];
+
+
+volatile char rxByte = 0;
+uint8_t rxBuffer[10]={0};
+volatile uint8_t rxBufferIndex = 0;
+volatile uint8_t flag_rx_done = 0;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	static uint32_t TimeBegin = 0;
 	static uint32_t TimeNow = 0;
-	/*CODE ISR*/
+
+/*CODE ISR*/
 	/*flag keypad*/
 	if(((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin)) && (state_button == KEYPAD))
 	{
@@ -110,6 +128,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 	}
 	/*END CODE ISR*/
+
 	HAL_Delay(20);
 	TimeBegin = HAL_GetTick();
 	while(		HAL_GPIO_ReadPin(GPIOB, UP_EXTI_3_Pin) == GPIO_PIN_RESET		\
@@ -130,6 +149,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	HAL_Delay(20);
 	EXTI->PR = ENTER_EXTI_5_Pin | DOWN_EXTI_4_Pin | UP_EXTI_3_Pin \
 			| R1_IN_Pin | R2_IN_Pin |R3_IN_Pin | R4_IN_Pin;
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(rxByte == '\r')
+	{
+		flag_rx_done = 1;
+	}
+	else
+	{
+		rxBuffer[rxBufferIndex] = rxByte;
+		rxBufferIndex++;
+	}
+	if(rxBufferIndex >= 20)
+	{
+		rxBufferIndex = 0;
+	}
+	HAL_UART_Receive_IT(&huart3, (uint8_t*)&rxByte, 1);
 }
 /* USER CODE END 0 */
 
@@ -162,8 +200,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_I2C2_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  // INIT HAL lib
+  HAL_UART_Receive_IT(&huart3, (uint8_t*)&rxByte, 1);
+
+  // INIT user
   KeyPad_Init(		// Cpl pin + port
 				    &COL_KEY_PAD_main, &ROW_KEY_PAD_main,												\
 					C1_OUT_GPIO_Port, C2_OUT_GPIO_Port, C3_OUT_GPIO_Port, C4_OUT_GPIO_Port,				\
@@ -174,8 +217,21 @@ int main(void)
 			  );
   CLCD_I2C_Init(&LCD1, &hi2c1, (0x27 << 1), 16, 4);
 
-  CLCD_I2C_SetCursor(&LCD1, 0, 0);
-  CLCD_I2C_WriteString(&LCD1, "Hello");
+  at24_I2C_Init(hi2c1);
+
+  UART_Init_UART(&huart3);
+
+	if(at24_isConnected())
+	{
+//		eraseStatus = at24_eraseChip();
+//		HAL_Delay(10);
+//
+//		writeStatus = at24_write(MEM_ADDR,wData, 15, 100);
+//		HAL_Delay(10);
+
+		readStatus = at24_read(MEM_ADDR,rData, 15, 100);
+		HAL_Delay(10);
+	}
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -188,12 +244,33 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		  flag_keypad = 0;
 	  }
-	  /*Enter key and display on LCD pass/num*/
-	  if((handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, password) == KEY_OK))
+
+
+	  /*UART handler after uart rx is exexecuted*/
+	  if(flag_rx_done == 1)
 	  {
-		  handler_keyIN_CheckPIN_NUM(password);
+		  flag_rx_done = 0;
+		  /*function handler uart*/
+		  if(UART_handler(rxBuffer, &num_IN_UART, pin_IN_UART) == UART_HANDLER_OKE);
+		  /*End function handler uart*/
+
+
+		  for(uint8_t i =0; i < sizeof(rxBuffer); i++)
+		  {
+			  rxBuffer[i] = 0;
+		  	  rxBufferIndex = 0;
+		  }
 	  }
-	  /*Chuyển đổi chế độ chọn kiểu nút nhấn thao tác màng hình*/
+
+
+	  /*Enter key and display on LCD pass/num*/
+	  if(handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, pin_IN) == KEY_OK)
+	  {
+		  handler_keyIN_CheckPIN_NUM(pin_IN);
+	  }
+
+
+	  /*Chuyển đổi chế độ ch�?n kiểu nút nhấn thao tác màng hình*/
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))
 	  {
 		  state_star_pass = NONE_STAR;
@@ -283,36 +360,35 @@ static void MX_I2C1_Init(void)
 }
 
 /**
-  * @brief I2C2 Initialization Function
+  * @brief USART3 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_I2C2_Init(void)
+static void MX_USART3_UART_Init(void)
 {
 
-  /* USER CODE BEGIN I2C2_Init 0 */
+  /* USER CODE BEGIN USART3_Init 0 */
 
-  /* USER CODE END I2C2_Init 0 */
+  /* USER CODE END USART3_Init 0 */
 
-  /* USER CODE BEGIN I2C2_Init 1 */
+  /* USER CODE BEGIN USART3_Init 1 */
 
-  /* USER CODE END I2C2_Init 1 */
-  hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 100000;
-  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c2.Init.OwnAddress1 = 0;
-  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c2.Init.OwnAddress2 = 0;
-  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN I2C2_Init 2 */
+  /* USER CODE BEGIN USART3_Init 2 */
 
-  /* USER CODE END I2C2_Init 2 */
+  /* USER CODE END USART3_Init 2 */
 
 }
 

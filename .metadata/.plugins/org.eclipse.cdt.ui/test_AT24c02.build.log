@@ -1,0 +1,16 @@
+18:38:06 **** Incremental Build of configuration Debug for project test_AT24c02 ****
+make -j8 all 
+arm-none-eabi-gcc -o "test_AT24c02.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Users\BaoThuan\OneDrive - The University of Technology\Desktop\PROJECT\GIT_HUB\BKDN_TuThuoc\test_AT24c02\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_AT24c02.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: test_AT24c02.elf
+ 
+arm-none-eabi-size   test_AT24c02.elf 
+arm-none-eabi-objdump -h -S  test_AT24c02.elf  > "test_AT24c02.list"
+   text	   data	    bss	    dec	    hex	filename
+  10440	     36	   1772	  12248	   2fd8	test_AT24c02.elf
+Finished building: default.size.stdout
+ 
+Finished building: test_AT24c02.list
+ 
+
+18:38:07 Build Finished. 0 errors, 0 warnings. (took 696ms)
+
