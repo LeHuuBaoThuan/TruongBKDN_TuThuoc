@@ -16,11 +16,13 @@ static uint8_t pin[5] = {0};
 
 /* <function summary decription>
   +) NOTE:
-    -Phan hoi debug
+    -Truyen vao voi param:
+    	*NUM:x, PIN:abcde\n\r
   +) PARAM:
-    -uint8_t * string								: chu truyen di (OKE, FAIL dai loai)
+    -uint8_t * rxBuffer								: value frome EXTI uart
   +) RETURN:
-    -
+    -bool											: true
+    												  false
 */
 static void response(char *string)
 {
@@ -114,7 +116,6 @@ static void UART_Assign_password()
 
 
 //************************** High Level Function ****************************************************************//
-
 void UART_Init_UART(UART_HandleTypeDef *huart)
 {
 	Lib_uart = *huart;

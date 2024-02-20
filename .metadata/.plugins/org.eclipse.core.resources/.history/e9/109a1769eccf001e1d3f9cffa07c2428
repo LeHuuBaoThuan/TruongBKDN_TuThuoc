@@ -35,13 +35,13 @@ static char* jagged_num[7] = { stt1, stt2, stt3, stt4, stt5, stt6, stt7 };
 
 
 
-static char pass1[5] = "54321";
-static char pass2[5] = "54321";
-static char pass3[5] = "54321";
-static char pass4[5] = "54321";
-static char pass5[5] = "54321";
-static char pass6[5] = "54321";
-static char pass7[5] = "54321";
+char pass1[5] = "54321";
+char pass2[5] = "54321";
+char pass3[5] = "54321";
+char pass4[5] = "54321";
+char pass5[5] = "54321";
+char pass6[5] = "54321";
+char pass7[5] = "54321";
 
 
 char* jagged_pass[7] = { pass1, pass2, pass3, pass4, pass5, pass6, pass7 };

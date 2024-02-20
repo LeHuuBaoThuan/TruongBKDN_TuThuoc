@@ -114,7 +114,6 @@ static void UART_Assign_password()
 
 
 //************************** High Level Function ****************************************************************//
-
 void UART_Init_UART(UART_HandleTypeDef *huart)
 {
 	Lib_uart = *huart;

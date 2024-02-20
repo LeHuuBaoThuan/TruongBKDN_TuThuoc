@@ -14,14 +14,7 @@ static uint8_t pin[5] = {0};
 
 //************************** LOW Level Function ****************************************************************//
 
-/* <function summary decription>
-  +) NOTE:
-    -Phan hoi debug
-  +) PARAM:
-    -uint8_t * string								: chu truyen di (OKE, FAIL dai loai)
-  +) RETURN:
-    -
-*/
+
 static void response(char *string)
 {
    HAL_UART_Transmit(&Lib_uart, (uint8_t *) string, strlen(string), 1000);
@@ -114,7 +107,6 @@ static void UART_Assign_password()
 
 
 //************************** High Level Function ****************************************************************//
-
 void UART_Init_UART(UART_HandleTypeDef *huart)
 {
 	Lib_uart = *huart;
