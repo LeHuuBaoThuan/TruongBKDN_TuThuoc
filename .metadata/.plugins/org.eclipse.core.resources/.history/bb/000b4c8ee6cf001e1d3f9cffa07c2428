@@ -73,7 +73,7 @@ static void UART_SetNUM_PIN(uint8_t * rxBuffer)
       token = NULL;
 
 //      sprintf(response_string, "num: %d, pin: %c%c%c%c%c", num, pin[0], pin[1], pin[2], pin[3], pin[4]);
-      sprintf(response_string, "num: %d, pin: %s", num, pin);
+      sprintf(response_string, "num: %d, pin: %c%c%c%c%c", num, pin);
       response(response_string);
       response("\r\n+OK\r\n ");
    }
@@ -96,9 +96,9 @@ static void UART_SetNUM_PIN(uint8_t * rxBuffer)
 */
 static void UART_Assign_password()
 {
-	for(uint8_t i = 0; i <= sizeof(jagged_pass[num - 1]); i++)
+	for(uint8_t i = 0; i <= sizeof(jagged_pass[num - 48]); i++)
 	{
-		*(jagged_pass[num - 1] + i) = pin[i];
+		*(jagged_pass[num - 48] + i) = pin[0];
 	}
 }
 

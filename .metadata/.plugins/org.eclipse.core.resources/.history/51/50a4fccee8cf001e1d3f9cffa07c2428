@@ -98,7 +98,7 @@ static void UART_Assign_password()
 {
 	for(uint8_t i = 0; i <= sizeof(jagged_pass[num - 1]); i++)
 	{
-		*(jagged_pass[num - 1] + i) = pin[i];
+		*(jagged_pass[num - 1]) = pin[num - 1];
 	}
 }
 

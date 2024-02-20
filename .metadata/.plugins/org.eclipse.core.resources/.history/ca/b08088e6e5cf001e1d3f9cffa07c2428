@@ -55,7 +55,7 @@ static bool UART_Check_string(uint8_t * rxBuffer)
 */
 static void UART_SetNUM_PIN(uint8_t * rxBuffer)
 {
-	char response_string[20] = {0};
+	uint8_t response_string[20] = {0};
    /* Kiểm tra độ dài của command "*NUM-PIN:x,abcde\n\r"*/
    if(strlen((char*)rxBuffer) == 17)
    {
@@ -68,13 +68,12 @@ static void UART_SetNUM_PIN(uint8_t * rxBuffer)
 
       /*Tách PIN thiết bị */
       token = strtok(NULL, "\n"); //abcde
-      memcpy(pin, token, 5); //pin = "abcde";
+      memcpy(pin, token, 5); //pin = abcde;
 
       token = NULL;
 
-//      sprintf(response_string, "num: %d, pin: %c%c%c%c%c", num, pin[0], pin[1], pin[2], pin[3], pin[4]);
       sprintf(response_string, "num: %d, pin: %s", num, pin);
-      response(response_string);
+      response("\r\n+OK\r\n ");
       response("\r\n+OK\r\n ");
    }
    else
@@ -96,9 +95,9 @@ static void UART_SetNUM_PIN(uint8_t * rxBuffer)
 */
 static void UART_Assign_password()
 {
-	for(uint8_t i = 0; i <= sizeof(jagged_pass[num - 1]); i++)
+	for(uint8_t i = 0; i <= sizeof(jagged_pass[num - 48]); i++)
 	{
-		*(jagged_pass[num - 1] + i) = pin[i];
+		*(jagged_pass[num - 48] + i) = pin[0];
 	}
 }
 

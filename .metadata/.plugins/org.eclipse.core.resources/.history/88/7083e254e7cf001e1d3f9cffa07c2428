@@ -85,7 +85,7 @@ uint8_t  rData[25];
 
 
 volatile char rxByte = 0;
-uint8_t rxBuffer[20]={0};
+uint8_t rxBuffer[10]={0};
 volatile uint8_t rxBufferIndex = 0;
 volatile uint8_t flag_rx_done = 0;
 
