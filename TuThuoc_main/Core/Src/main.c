@@ -27,6 +27,7 @@
 #include<handler_keyIN.h>
 #include<uart_user.h>
 #include "EEPROM.h"
+#include <fet_74hc595.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -218,6 +219,8 @@ int main(void)
 
   UART_Init_UART(&huart3);
 
+  FET_74HC595_Init(DATA_595_GPIO_Port, CLK_595_GPIO_Port, LAT_595_GPIO_Port, DATA_595_Pin, CLK_595_Pin, LAT_595_Pin);
+
 	if(at24_isConnected())
 	{
 		readStatus = at24_read(MEM_ADDR,rData, 15, 100);
@@ -235,12 +238,11 @@ int main(void)
 		  flag_keypad = 0;
 		  HAL_GPIO_TogglePin(LED_KEY_GPIO_Port, LED_KEY_Pin);
 	  }
-	  if(flag_button == 1)
+	  else if(flag_button == 1)
 	  {
 		  flag_button = 0;
 		  HAL_GPIO_TogglePin(LED_BUTTON_GPIO_Port, LED_BUTTON_Pin);
 	  }
-
 
 	  /*UART handler after uart rx is exexecuted*/
 	  if(flag_rx_done == 1)
@@ -248,9 +250,7 @@ int main(void)
 		  flag_rx_done = 0;
 		  /*function handler uart*/
 		  if(UART_handler(rxBuffer, &num_IN_UART, pin_IN_UART) == UART_HANDLER_OKE);
-		  /*End function handler uart*/
-
-
+		  /*Reset arr rx*/
 		  for(uint8_t i =0; i < sizeof(rxBuffer); i++)
 		  {
 			  rxBuffer[i] = 0;
@@ -258,13 +258,19 @@ int main(void)
 		  }
 	  }
 
-
 	  /*Enter key and display on LCD pass/num*/
 	  if(handler_keyIN_enterKey_DisplayLCD(&LCD1, state_button, &key, pin_IN) == KEY_OK)
 	  {
-		  handler_keyIN_CheckPIN_NUM(pin_IN);
+		  state_hand = handler_keyIN_CheckPIN_NUM(pin_IN, &num_set_fet);
+		  if(state_hand == PASS_OKE && num_set_fet != 0)
+		  {
+			  FET_74HC595_Set_Reset(0x01 << (num_set_fet - 1));
+		  }
+		  else
+		  {
+			  FET_74HC595_Set_Reset(RESET_ALL_FET);
+		  }
 	  }
-
 
 	  /*Chuyển đổi chế độ ch�?n kiểu nút nhấn thao tác màng hình*/
 	  if((enter_num_pass.signal_enter_pass == PROCESSING) || (enter_num_pass.signal_enter_num == PROCESSING))

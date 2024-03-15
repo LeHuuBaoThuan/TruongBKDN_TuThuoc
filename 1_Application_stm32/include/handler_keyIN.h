@@ -18,11 +18,22 @@ typedef enum
 	KEY_NOT = 0
 } STATE_KEY;
 
+typedef enum
+{
+	NUM_OKE,
+	NUM_NONE,
+	PASS_OKE,
+	PASS_NONE,
+	NUM_PASS_NONE
+} STATE_HANDLER;
+
 #define SIZE_ROW_NUM 	ROW_BEGIN_KEPAD_NUM + 1 - 1				// Cột đầu tiên nhập num: ROW_BEGIN_KEPAD_NUM + so luong NUM duoc dien vao
 #define SIZE_ROW_PASS 	ROW_BEGIN_KEPAD_PASS + 5 - 1			// Cột đâu tiên nhập pass: ROW_BEGIN_KEPAD_PASS + so luong PASS duoc dien vao
 
 
 extern char* jagged_pass[7];
+extern STATE_HANDLER state_hand;
+extern uint8_t num_set_fet;
 
 //==============================================================================================================================================================
 /* <function summary decription>
@@ -49,9 +60,13 @@ STATE_KEY handler_keyIN_enterKey_DisplayLCD(CLCD_I2C_Name* LCD_user, STATE_SELEC
     - Kiểm tra num/pass và trả về khung hình OKE, Fail
   +) PARAM:
     -char * password                       : key được nhập từ bàn phiếm khi được báo nhập đủ
+    -num								   : con trỏ trỏ đến vị trí của num_set_fet để điều khiển fet khi nhập đúng mã
   +) RETURN:
-    -0                                  : done
-    -else                               : reason of failed
+	-NUM_OKE,                              : none
+	-NUM_NONE,                             : none
+	-PASS_OKE,                             : Chạy thuốc
+	-PASS_NONE,                            : none
+	-NUM_PASS_NONE                         : none
 */
-void handler_keyIN_CheckPIN_NUM(char * password);
+STATE_HANDLER handler_keyIN_CheckPIN_NUM(char * password, uint8_t* num);
 #endif /* _HANDLER_KEYIN_H_ */

@@ -1,0 +1,15 @@
+/*
+ * fet_74hc595.h
+ *
+ *  Created on: Mar 16, 2024
+ *      Author: BaoThuan
+ */
+#include "stm32f1xx_hal.h"
+
+#define RESET_ALL_FET 0x00
+
+void FET_74HC595_Init(	GPIO_TypeDef * DS_Port, GPIO_TypeDef * Shift_Port, GPIO_TypeDef * ST_Port, 			\
+						uint16_t DS_Pin, uint16_t SH_Pin, uint16_t ST_Pin);
+
+
+void FET_74HC595_Set_Reset(uint16_t  tt);
