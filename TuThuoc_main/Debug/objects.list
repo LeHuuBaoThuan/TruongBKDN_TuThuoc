@@ -4,7 +4,6 @@
 "./1_Application_stm32/fet_74hc595.o"
 "./1_Application_stm32/handler_keyIN.o"
 "./1_Application_stm32/lcd_user.o"
-"./1_Application_stm32/relay.o"
 "./1_Application_stm32/uart_user.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f1xx_hal_msp.o"
