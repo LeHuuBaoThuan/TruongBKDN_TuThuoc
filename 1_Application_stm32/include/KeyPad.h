@@ -49,6 +49,8 @@ typedef struct
 
 #define 			KEYPAD_NOT_PRESSED			'\0'
 
+extern volatile uint8_t flag_keypad;
+
 
 //==============================================================================================================================================================
 /* <function summary decription>

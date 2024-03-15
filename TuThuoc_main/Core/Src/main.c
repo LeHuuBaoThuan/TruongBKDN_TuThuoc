@@ -75,8 +75,6 @@ char pin_IN_UART[5] = {0};
 char num_IN_UART = 0;
 
 
-volatile uint8_t flag_keypad = 0;
-
 bool writeStatus = false;
 bool readStatus = false;
 bool eraseStatus = false;
@@ -93,7 +91,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	static uint32_t TimeBegin = 0;
 	static uint32_t TimeNow = 0;
-
 /*CODE ISR*/
 	/*flag keypad*/
 	if(((R1_IN_Pin == GPIO_Pin) | (R2_IN_Pin == GPIO_Pin) | (R3_IN_Pin == GPIO_Pin) | (R4_IN_Pin == GPIO_Pin)) && (state_button == KEYPAD))
@@ -235,8 +232,13 @@ int main(void)
 	  /*Debug key*/
 	  if(flag_keypad == 1)
 	  {
-		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		  flag_keypad = 0;
+		  HAL_GPIO_TogglePin(LED_KEY_GPIO_Port, LED_KEY_Pin);
+	  }
+	  if(flag_button == 1)
+	  {
+		  flag_button = 0;
+		  HAL_GPIO_TogglePin(LED_BUTTON_GPIO_Port, LED_BUTTON_Pin);
 	  }
 
 
@@ -403,30 +405,38 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_BUTTON_GPIO_Port, LED_BUTTON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, R7_Pin|R6_Pin|R5_Pin|R4_Pin
-                          |R3_Pin|R2_Pin|R1_Pin|C4_OUT_Pin
-                          |C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_STATE_Pin|LED_KEY_Pin|LED_RESULT_Pin|LED_USER_Pin
+                          |DATA_595_Pin|C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin
+                          |C1_OUT_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, CLK_595_Pin|LAT_595_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : LED_BUTTON_Pin */
+  GPIO_InitStruct.Pin = LED_BUTTON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : R7_Pin R6_Pin R5_Pin R4_Pin
-                           R3_Pin R2_Pin R1_Pin C4_OUT_Pin
-                           C3_OUT_Pin C2_OUT_Pin C1_OUT_Pin */
-  GPIO_InitStruct.Pin = R7_Pin|R6_Pin|R5_Pin|R4_Pin
-                          |R3_Pin|R2_Pin|R1_Pin|C4_OUT_Pin
-                          |C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin;
+  /*Configure GPIO pins : LED_STATE_Pin LED_KEY_Pin LED_RESULT_Pin LED_USER_Pin
+                           DATA_595_Pin */
+  GPIO_InitStruct.Pin = LED_STATE_Pin|LED_KEY_Pin|LED_RESULT_Pin|LED_USER_Pin
+                          |DATA_595_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : CLK_595_Pin LAT_595_Pin */
+  GPIO_InitStruct.Pin = CLK_595_Pin|LAT_595_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : R4_IN_Pin R3_IN_Pin R2_IN_Pin R1_IN_Pin
                            UP_EXTI_3_Pin DOWN_EXTI_4_Pin ENTER_EXTI_5_Pin */
@@ -435,6 +445,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : C4_OUT_Pin C3_OUT_Pin C2_OUT_Pin C1_OUT_Pin */
+  GPIO_InitStruct.Pin = C4_OUT_Pin|C3_OUT_Pin|C2_OUT_Pin|C1_OUT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
