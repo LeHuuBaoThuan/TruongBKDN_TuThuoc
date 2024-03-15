@@ -1,3 +1,20 @@
+/**
+ * Exam:
+ * 	if(at24_isConnected())
+	{
+		eraseStatus = at24_eraseChip();
+		HAL_Delay(10);
+
+		writeStatus = at24_write(MEM_ADDR,wData, 15, 100);
+		HAL_Delay(10);
+
+		readStatus = at24_read(MEM_ADDR,rData, 15, 100);
+		HAL_Delay(10);
+	}
+ */
+
+
+
 #ifndef	_AT24CXX_H
 #define	_AT24CXX_H
 

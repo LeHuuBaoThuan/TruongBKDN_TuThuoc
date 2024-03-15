@@ -4300,27 +4300,27 @@ LOAD c:/users/baothuan/stm32cubeide_1.12.1/stm32cubeide/plugins/com.st.stm32cube
 LOAD c:/users/baothuan/stm32cubeide_1.12.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.200.202301161003/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a
 LOAD c:/users/baothuan/stm32cubeide_1.12.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.200.202301161003/tools/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp\libgcc.a
 
-.debug_info     0x0000000000000000     0xe8a8
+.debug_info     0x0000000000000000     0xe8a7
  .debug_info    0x0000000000000000      0x81f ./0_Driver_stm32/EEPROM.o
  .debug_info    0x000000000000081f      0x9e8 ./0_Driver_stm32/i2c-lcd.o
  .debug_info    0x0000000000001207      0x529 ./1_Application_stm32/KeyPad.o
  .debug_info    0x0000000000001730      0xa11 ./1_Application_stm32/handler_keyIN.o
  .debug_info    0x0000000000002141      0x92c ./1_Application_stm32/lcd_user.o
  .debug_info    0x0000000000002a6d      0x84e ./1_Application_stm32/uart_user.o
- .debug_info    0x00000000000032bb     0x1643 ./Core/Src/main.o
- .debug_info    0x00000000000048fe      0xd3e ./Core/Src/stm32f1xx_hal_msp.o
- .debug_info    0x000000000000563c      0x697 ./Core/Src/stm32f1xx_it.o
- .debug_info    0x0000000000005cd3      0x6e0 ./Core/Src/syscalls.o
- .debug_info    0x00000000000063b3      0x171 ./Core/Src/sysmem.o
- .debug_info    0x0000000000006524      0x23d ./Core/Src/system_stm32f1xx.o
- .debug_info    0x0000000000006761       0x22 ./Core/Startup/startup_stm32f103c8tx.o
- .debug_info    0x0000000000006783      0x734 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
- .debug_info    0x0000000000006eb7      0xb20 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
- .debug_info    0x00000000000079d7      0x744 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
- .debug_info    0x000000000000811b      0x615 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o
- .debug_info    0x0000000000008730     0x2761 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o
- .debug_info    0x000000000000ae91      0x865 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
- .debug_info    0x000000000000b6f6     0x31b2 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
+ .debug_info    0x00000000000032bb     0x1642 ./Core/Src/main.o
+ .debug_info    0x00000000000048fd      0xd3e ./Core/Src/stm32f1xx_hal_msp.o
+ .debug_info    0x000000000000563b      0x697 ./Core/Src/stm32f1xx_it.o
+ .debug_info    0x0000000000005cd2      0x6e0 ./Core/Src/syscalls.o
+ .debug_info    0x00000000000063b2      0x171 ./Core/Src/sysmem.o
+ .debug_info    0x0000000000006523      0x23d ./Core/Src/system_stm32f1xx.o
+ .debug_info    0x0000000000006760       0x22 ./Core/Startup/startup_stm32f103c8tx.o
+ .debug_info    0x0000000000006782      0x734 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
+ .debug_info    0x0000000000006eb6      0xb20 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
+ .debug_info    0x00000000000079d6      0x744 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
+ .debug_info    0x000000000000811a      0x615 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o
+ .debug_info    0x000000000000872f     0x2761 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o
+ .debug_info    0x000000000000ae90      0x865 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
+ .debug_info    0x000000000000b6f5     0x31b2 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
 
 .debug_abbrev   0x0000000000000000     0x2653
  .debug_abbrev  0x0000000000000000      0x1e2 ./0_Driver_stm32/EEPROM.o
