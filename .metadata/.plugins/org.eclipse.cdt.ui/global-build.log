@@ -1,23 +1,29 @@
-18:34:42 **** Incremental Build of configuration Debug for project TuThuoc_main ****
+04:37:22 **** Incremental Build of configuration Debug for project TuThuoc_main ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/1_Application_stm32/include" -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/0_include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc "../Core/Src/stm32f1xx_hal_msp.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/1_Application_stm32/include" -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/0_include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32f1xx_hal_msp.d" -MT"Core/Src/stm32f1xx_hal_msp.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_hal_msp.o"
-arm-none-eabi-gcc "../Core/Src/stm32f1xx_it.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/1_Application_stm32/include" -I"C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/0_include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32f1xx_it.d" -MT"Core/Src/stm32f1xx_it.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_it.o"
 arm-none-eabi-gcc -o "TuThuoc_main.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Users\BaoThuan\OneDrive - The University of Technology\Desktop\PROJECT\GIT_HUB\BKDN_TuThuoc\TuThuoc_main\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TuThuoc_main.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+C:/Users/BaoThuan/STM32CubeIDE_1.12.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: TuThuoc_main.elf has a LOAD segment with RWX permissions
 Finished building target: TuThuoc_main.elf
  
-arm-none-eabi-size   TuThuoc_main.elf 
-arm-none-eabi-objdump -h -S  TuThuoc_main.elf  > "TuThuoc_main.list"
+arm-none-eabi-size  TuThuoc_main.elf 
+arm-none-eabi-objdump -h -S TuThuoc_main.elf  > "TuThuoc_main.list"
    text	   data	    bss	    dec	    hex	filename
-  27480	    308	   2100	  29888	   74c0	TuThuoc_main.elf
+  27332	    304	   2416	  30052	   7564	TuThuoc_main.elf
 Finished building: default.size.stdout
  
 Finished building: TuThuoc_main.list
  
-18:34:49 **** Incremental Build of configuration Debug for project TuThuoc_main ****
+04:37:32 **** Incremental Build of configuration Debug for project TuThuoc_main ****
 make -j8 all 
-arm-none-eabi-size   TuThuoc_main.elf 
+arm-none-eabi-size  TuThuoc_main.elf 
    text	   data	    bss	    dec	    hex	filename
-  27480	    308	   2100	  29888	   74c0	TuThuoc_main.elf
+  27332	    304	   2416	  30052	   7564	TuThuoc_main.elf
+Finished building: default.size.stdout
+ 
+04:37:52 **** Incremental Build of configuration Debug for project TuThuoc_main ****
+make -j8 all 
+arm-none-eabi-size  TuThuoc_main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  27332	    304	   2416	  30052	   7564	TuThuoc_main.elf
 Finished building: default.size.stdout
  

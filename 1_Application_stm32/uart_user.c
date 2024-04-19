@@ -9,6 +9,7 @@
 
 static UART_HandleTypeDef Lib_uart;
 static const char * confirm_NUM_PIN = "*NUM-PIN:";
+static const char * confirm_RELAY = "Motor:";
 static uint8_t num = 0;
 static uint8_t pin[5] = {0};
 
@@ -32,22 +33,30 @@ static void response(char *string)
 /* <function summary decription>
   +) NOTE:
     -Truyen vao voi param:
-    	*NUM:x, PIN:abcde\n\r
+    	*NUM:x,PIN:abcde\n\r				với x = 0,6
+    	Motor:x								với x = 0,6
   +) PARAM:
     -uint8_t * rxBuffer								: value frome EXTI uart
   +) RETURN:
     -bool											: true
     												  false
 */
-static bool UART_Check_string(uint8_t * rxBuffer)
+static uint8_t UART_Check_string(uint8_t * rxBuffer)
 {
 	if(strstr((char*)rxBuffer, confirm_NUM_PIN) != NULL)
 	{
-		return true;
+		return 0;
+	}
+	else if (strstr((char*)rxBuffer, confirm_RELAY) != NULL)
+	{
+		char *token = NULL;
+		token = strtok((char*)rxBuffer, ":"); //MOTOR
+		token = strtok(NULL, ","); //x
+		return *token - 47;
 	}
 	else
 	{
-		return false;
+		return 10;	// Gui chuoi khong xac dinh
 	}
 }
 
@@ -122,9 +131,10 @@ void UART_Init_UART(UART_HandleTypeDef *huart)
 
 
 
-STATE_TX_PIN UART_handler(uint8_t * rxBuffer, char* NUM, char* PIN)
+STATE_TX_PIN UART_handler(uint8_t * rxBuffer, uint8_t* relayx, char* NUM, char* PIN)
 {
-	if(UART_Check_string(rxBuffer) == true)	// Kiem tra chuoi
+	uint8_t state = UART_Check_string(rxBuffer);
+	if(state == 0)	// Kiem tra chuoi
 	{
 		UART_SetNUM_PIN(rxBuffer);			// Gan vao val "pin" voi num tuong ung
 
@@ -137,6 +147,11 @@ STATE_TX_PIN UART_handler(uint8_t * rxBuffer, char* NUM, char* PIN)
 			PIN[i] = pin[i];
 		}
 
+		return UART_HANDLER_OKE;
+	}
+	else if(state <= 7)
+	{
+		*relayx = state;
 		return UART_HANDLER_OKE;
 	}
 	else

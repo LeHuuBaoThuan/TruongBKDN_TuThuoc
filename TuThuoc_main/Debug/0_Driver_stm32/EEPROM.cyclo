@@ -1,5 +1,5 @@
-EEPROM.c:21:6:at24_I2C_Init	1
-EEPROM.c:31:6:at24_isConnected	2
-EEPROM.c:50:6:at24_write	6
-EEPROM.c:122:6:at24_read	3
-EEPROM.c:158:6:at24_eraseChip	3
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/EEPROM.c:21:6:at24_I2C_Init	1
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/EEPROM.c:31:6:at24_isConnected	2
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/EEPROM.c:50:6:at24_write	6
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/EEPROM.c:122:6:at24_read	3
+C:/Users/BaoThuan/OneDrive - The University of Technology/Desktop/PROJECT/GIT_HUB/BKDN_TuThuoc/0_Driver_stm32/EEPROM.c:158:6:at24_eraseChip	3

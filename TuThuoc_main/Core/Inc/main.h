@@ -57,7 +57,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-
 #define UP_EXTI_3_Pin GPIO_PIN_3
 #define UP_EXTI_3_GPIO_Port GPIOB
 #define UP_EXTI_3_EXTI_IRQn EXTI3_IRQn
@@ -67,6 +66,9 @@ void Error_Handler(void);
 #define ENTER_EXTI_5_Pin GPIO_PIN_5
 #define ENTER_EXTI_5_GPIO_Port GPIOB
 #define ENTER_EXTI_5_EXTI_IRQn EXTI9_5_IRQn
+
+#define BUZZER_Pin GPIO_PIN_8
+#define BUZZER_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 /*LED define pin*/

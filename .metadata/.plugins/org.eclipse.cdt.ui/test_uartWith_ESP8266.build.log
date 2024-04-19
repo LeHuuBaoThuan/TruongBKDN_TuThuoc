@@ -1,0 +1,10 @@
+15:47:51 **** Incremental Build of configuration Debug for project test_uartWith_ESP8266 ****
+make -j8 all 
+arm-none-eabi-size   test_uartWith_ESP8266.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8596	     20	   1668	  10284	   282c	test_uartWith_ESP8266.elf
+Finished building: default.size.stdout
+ 
+
+15:47:54 Build Finished. 0 errors, 0 warnings. (took 3s.519ms)
+

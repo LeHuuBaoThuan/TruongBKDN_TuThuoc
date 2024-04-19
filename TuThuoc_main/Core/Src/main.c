@@ -81,7 +81,7 @@ bool eraseStatus = false;
 uint8_t  wData[] = "Hello World 123";
 uint8_t  rData[25];
 
-
+uint8_t relay_uartCont = 0;
 volatile char rxByte = 0;
 uint8_t rxBuffer[20]={0};
 volatile uint8_t rxBufferIndex = 0;
@@ -101,19 +101,21 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	/*flag lcd*/
 	if(state_button == BUTTON)
 	{
-		flag_button = 1;
 		if(UP_EXTI_3_Pin == GPIO_Pin)
 		{
+			flag_button = 1;
 			Config++;
 			if(Config > CONFIG_ROW3) Config = CONFIG_ROW1;
 		}
 		else if(DOWN_EXTI_4_Pin == GPIO_Pin)
 		{
+			flag_button = 1;
 			Config--;
 			if(Config < CONFIG_ROW1) Config = CONFIG_ROW3;
 		}
 		else if(ENTER_EXTI_5_Pin == GPIO_Pin)
 		{
+			flag_button = 1;
 			if(1 == Mode)
 			{
 				Enter = 1;
@@ -212,7 +214,7 @@ int main(void)
 					R1_IN_GPIO_Port, R2_IN_GPIO_Port, R3_IN_GPIO_Port, R4_IN_GPIO_Port,					\
 					R1_IN_Pin, R2_IN_Pin, R3_IN_Pin, R4_IN_Pin
 			  );
-  CLCD_I2C_Init(&LCD1, &hi2c1, (0x27 << 1), 16, 4);
+  CLCD_I2C_Init(&LCD1, &hi2c1, (0x27 << 1), 20, 4);
 
   at24_I2C_Init(hi2c1);
 
@@ -220,11 +222,17 @@ int main(void)
 
   FET_74HC595_Init(DATA_595_GPIO_Port, CLK_595_GPIO_Port, LAT_595_GPIO_Port, DATA_595_Pin, CLK_595_Pin, LAT_595_Pin);
 
-	if(at24_isConnected())
-	{
-		readStatus = at24_read(MEM_ADDR,rData, 15, 100);
-		HAL_Delay(10);
-	}
+  if(at24_isConnected())
+  {
+	  readStatus = at24_read(MEM_ADDR,rData, 15, 100);
+	  HAL_Delay(10);
+  }
+
+  HAL_GPIO_WritePin(LED_KEY_GPIO_Port, LED_KEY_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_BUTTON_GPIO_Port, LED_BUTTON_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_RESULT_GPIO_Port, LED_RESULT_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_STATE_GPIO_Port, LED_STATE_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_USER_GPIO_Port, LED_USER_Pin, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -239,7 +247,7 @@ int main(void)
 	  }
 	  else if(flag_button == 1)
 	  {
-		  flag_button = 0;
+		  //flag_button = 0;
 		  HAL_GPIO_TogglePin(LED_BUTTON_GPIO_Port, LED_BUTTON_Pin);
 	  }
 
@@ -249,7 +257,7 @@ int main(void)
 		  flag_rx_done = 0;
 		  HAL_GPIO_TogglePin(LED_RESULT_GPIO_Port, LED_RESULT_Pin);
 		  /*function handler uart*/
-		  if(UART_handler(rxBuffer, &num_IN_UART, pin_IN_UART) == UART_HANDLER_OKE);
+		  if(UART_handler(rxBuffer, &relay_uartCont, &num_IN_UART, pin_IN_UART) == UART_HANDLER_OKE);
 		  /*Reset arr rx*/
 		  for(uint8_t i =0; i < sizeof(rxBuffer); i++)
 		  {
@@ -264,12 +272,17 @@ int main(void)
 		  state_hand = handler_keyIN_CheckPIN_NUM(pin_IN, &num_set_fet);
 		  if(state_hand == PASS_OKE && num_set_fet != 0)
 		  {
-			  FET_74HC595_Set_Reset(0x01 << (num_set_fet - 1));
-		  }
-		  else
-		  {
+			  FET_74HC595_Set_Reset(0x01 << (num_set_fet));
+			  HAL_Delay(1000);
 			  FET_74HC595_Set_Reset(RESET_ALL_FET);
 		  }
+	  }
+	  if(relay_uartCont > 0 && relay_uartCont <= 7)
+	  {
+		  FET_74HC595_Set_Reset(0x01 << (relay_uartCont));
+		  HAL_Delay(1000);
+		  FET_74HC595_Set_Reset(RESET_ALL_FET+1);
+		  relay_uartCont = 0;
 	  }
 
 	  /*Chuyển đổi chế độ ch�?n kiểu nút nhấn thao tác màng hình*/
@@ -282,7 +295,6 @@ int main(void)
 	  {
 		  state_button = BUTTON;
 	  }
-
 	  lcd_system_handler(&LCD1);
     /* USER CODE END WHILE */
 
@@ -419,7 +431,7 @@ static void MX_GPIO_Init(void)
                           |C1_OUT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, CLK_595_Pin|LAT_595_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, CLK_595_Pin|LAT_595_Pin|BUZZER_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LED_BUTTON_Pin */
   GPIO_InitStruct.Pin = LED_BUTTON_Pin;
@@ -442,8 +454,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DATA_595_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : CLK_595_Pin LAT_595_Pin */
-  GPIO_InitStruct.Pin = CLK_595_Pin|LAT_595_Pin;
+  /*Configure GPIO pins : CLK_595_Pin LAT_595_Pin BUZZER_Pin */
+  GPIO_InitStruct.Pin = CLK_595_Pin|LAT_595_Pin|BUZZER_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

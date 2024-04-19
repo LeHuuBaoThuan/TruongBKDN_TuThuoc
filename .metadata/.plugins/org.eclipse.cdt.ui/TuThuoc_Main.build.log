@@ -1,10 +1,10 @@
-18:34:49 **** Incremental Build of configuration Debug for project TuThuoc_main ****
+04:37:52 **** Incremental Build of configuration Debug for project TuThuoc_main ****
 make -j8 all 
-arm-none-eabi-size   TuThuoc_main.elf 
+arm-none-eabi-size  TuThuoc_main.elf 
    text	   data	    bss	    dec	    hex	filename
-  27480	    308	   2100	  29888	   74c0	TuThuoc_main.elf
+  27332	    304	   2416	  30052	   7564	TuThuoc_main.elf
 Finished building: default.size.stdout
  
 
-18:34:50 Build Finished. 0 errors, 0 warnings. (took 583ms)
+04:37:53 Build Finished. 0 errors, 0 warnings. (took 729ms)
 
